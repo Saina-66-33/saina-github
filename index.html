@@ -28,6 +28,32 @@ body, html {
     z-index: 2;
 }
 
+/* Notebook lines (like ruled paper) */
+.notebook::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    width: 95%;
+    height: 1px;
+    background: #eee;
+    box-shadow:
+        0 30px 0 #eee,
+        0 60px 0 #eee,
+        0 90px 0 #eee,
+        0 120px 0 #eee,
+        0 150px 0 #eee,
+        0 180px 0 #eee,
+        0 210px 0 #eee,
+        0 240px 0 #eee,
+        0 270px 0 #eee,
+        0 300px 0 #eee,
+        0 330px 0 #eee,
+        0 360px 0 #eee,
+        0 390px 0 #eee,
+        0 420px 0 #eee;
+}
+
 .heart {
     position: absolute;
     font-size: 24px;
@@ -166,7 +192,7 @@ function showFirstMessage() {
                 showCenterHeart();
             }, 500);
         }, 3000);
-    }, 6600); // ✅ 6.6 seconds delay here
+    }, 6600);
 }
 
 // Center heart with auto trigger after 3s
@@ -202,7 +228,7 @@ function showCenterHeart() {
     }
 
     heart.addEventListener('click', trigger, { once: true });
-    setTimeout(trigger, 3000); // ✅ auto after 3s
+    setTimeout(trigger, 3000);
 }
 
 // Second message
@@ -225,27 +251,43 @@ function showSecondMessage() {
 const lines = [
     "You make my heart feel full 💖",
     "Sweetheart, you are my heart forever ❣️",
-    "Just thinking of you makes me smile 🥰"
+    "Just thinking of you makes me smile 🥰",
+    "Every moment with you is magic ✨",
+    "I cherish you more than words ❤️",
+    "You complete my world 💕"
 ];
 
+// Improved showRandomLines to fill notebook
 function showRandomLines() {
     let index = 0;
     function showLine() {
         if (index >= lines.length) return;
 
-        const line = document.createElement('div');
-        line.classList.add('message', 'small');
-        line.style.top = (30 + Math.random() * 40) + "%";
-        line.innerText = lines[index++];
-        notebook.appendChild(line);
+        // Add 2-3 lines at a time randomly for fullness
+        const linesToShow = Math.floor(1 + Math.random() * 2);
+        for (let i = 0; i < linesToShow && index < lines.length; i++) {
+            const line = document.createElement('div');
+            line.classList.add('message', 'small');
 
-        setTimeout(() => line.style.opacity = 1, 200);
-        setTimeout(() => {
-            line.style.opacity = 0;
-            setTimeout(() => line.remove(), 500);
-        }, 6000);
+            // Random vertical position within notebook
+            line.style.top = (10 + Math.random() * 85) + "%";
 
-        setTimeout(showLine, 7000);
+            // Slight rotation for handwritten feel
+            line.style.transform = `rotate(${Math.random()*6-3}deg)`;
+
+            // Alternate color for variety
+            line.style.color = index % 2 === 0 ? "#d6336c" : "#ff5c8d";
+
+            line.innerText = lines[index++];
+            notebook.appendChild(line);
+
+            setTimeout(() => line.style.opacity = 1, 200);
+            setTimeout(() => {
+                line.style.opacity = 0;
+                setTimeout(() => line.remove(), 500);
+            }, 6000);
+        }
+        setTimeout(showLine, 2500); // show next batch faster for notebook fullness
     }
     showLine();
 }
