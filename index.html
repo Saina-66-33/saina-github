@@ -264,3 +264,142 @@ setTimeout(showFirstMessage, 1000);
 
 </body>
 </html>
+</body>
+<script>
+// ---------- Lines to show ----------
+const shortMessageLines = [
+  "You are my sunshine on cloudy days ☀️",
+  "My laughter, my calm, my peace 🥰",
+  "Every moment with you feels magical ✨",
+  "My heart beats for you, always 💓",
+  "You make life sweeter than chocolate 🍫",
+  "With you, everything is perfect 💞",
+  "You’re my favorite person in the whole world 🌹"
+];
+
+const dailyMessages = [
+  { day: "Propose Day", text: "From the moment I saw you, I knew… you had my heart ❤️" },
+  { day: "Chocolate Day", text: "You’re my sweetest happiness, sweeter than any chocolate 🍫" },
+  { day: "Rose Day", text: "A rose for you 🌹… as beautiful and unique as your love" },
+  { day: "Promise Day", text: "I promise to always stand by you, no matter what 💞" },
+  { day: "Hug Day", text: "Your hugs are my safe place 🤗… I never want to let go" },
+  { day: "Kiss Day", text: "Every kiss is a little spark that lights up my heart 💋" }
+];
+
+const valentineQuestion = "Will you be my Valentine? ❤️";
+const finalPromise = "Love forever… just for you, from the bottom of my heart 💖";
+
+// ---------- Helper function ----------
+function showLineWithHearts(text, delay = 0, callback) {
+  const notebook = document.getElementById('notebook');
+  const line = document.createElement('div');
+  line.classList.add('message', 'small');
+  line.style.top = `${30 + Math.random()*40}%`;
+  line.innerText = text;
+  line.style.opacity = 0;
+  notebook.appendChild(line);
+  
+  setTimeout(() => {
+    line.style.transition = 'transform 0.8s, opacity 0.8s';
+    line.style.transform = 'translateX(0)';
+    line.style.opacity = 1;
+    
+    // Floating hearts around the line
+    for(let i=0; i<3; i++){
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.innerText = '❤️';
+      heart.style.left = `${Math.random() * 550}px`;
+      heart.style.top = `${parseFloat(line.style.top) + 30 + Math.random()*20}px`;
+      heart.style.fontSize = `${15 + Math.random()*20}px`;
+      heart.style.animationDuration = `${2 + Math.random()*2}s`;
+      notebook.appendChild(heart);
+      setTimeout(() => heart.remove(), 3000);
+    }
+
+    // Sparkle
+    const sparkle = document.createElement('div');
+    sparkle.classList.add('sparkle');
+    sparkle.innerText = '✨';
+    sparkle.style.left = `${Math.random()*550}px`;
+    sparkle.style.top = `${parseFloat(line.style.top) - 10}px`;
+    sparkle.style.opacity = 1;
+    notebook.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 2000);
+    
+    // Remove line after 4 seconds
+    setTimeout(() => {
+      line.style.opacity = 0;
+      setTimeout(() => line.remove(), 500);
+      if(callback) callback();
+    }, 4000);
+  }, delay);
+}
+
+// ---------- Sequence function ----------
+function showAllLines() {
+  let i = 0;
+  function showNextShort() {
+    if(i < shortMessageLines.length) {
+      showLineWithHearts(shortMessageLines[i], 0, showNextShort);
+      i++;
+    } else {
+      showDailyMessages();
+    }
+  }
+  showNextShort();
+}
+
+function showDailyMessages() {
+  let i = 0;
+  function nextDaily() {
+    if(i < dailyMessages.length) {
+      showLineWithHearts(dailyMessages[i].text, 0, nextDaily);
+      i++;
+    } else {
+      showValentineQuestion();
+    }
+  }
+  nextDaily();
+}
+
+function showValentineQuestion() {
+  const notebook = document.getElementById('notebook');
+  const line = document.createElement('div');
+  line.classList.add('message', 'big');
+  line.innerText = valentineQuestion;
+  line.style.top = '50%';
+  line.style.opacity = 0;
+  notebook.appendChild(line);
+
+  setTimeout(() => {
+    line.style.transition = 'transform 1s, opacity 1s';
+    line.style.transform = 'scale(1)';
+    line.style.opacity = 1;
+
+    // Floating hearts around
+    for(let i=0; i<5; i++){
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.innerText = '❤️';
+      heart.style.left = `${Math.random() * 550}px`;
+      heart.style.top = `${parseFloat(line.style.top) + 30 + Math.random()*20}px`;
+      heart.style.fontSize = `${20 + Math.random()*20}px`;
+      heart.style.animationDuration = `${2 + Math.random()*2}s`;
+      notebook.appendChild(heart);
+      setTimeout(() => heart.remove(), 4000);
+    }
+
+    // Show final promise after 4s
+    setTimeout(() => {
+      line.style.opacity = 0;
+      setTimeout(() => line.remove(), 500);
+      showLineWithHearts(finalPromise);
+    }, 4000);
+
+  }, 500);
+}
+
+// ---------- Start sequence ----------
+setTimeout(showAllLines, 1000);
+</script>
