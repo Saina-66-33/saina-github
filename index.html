@@ -110,28 +110,6 @@ body, html {
     50% { transform: scale(1.2); opacity: 1; }
     100% { transform: scale(1); opacity: 1; }
 }
-
-/* Tiny "I love you" watermark effect */
-.tiny-love {
-    position: absolute;
-    font-size: 14px;
-    color: #ff4d4d;
-    opacity: 0.3; /* subtle soft effect */
-    pointer-events: none;
-    animation: floatLove 8s linear infinite, fadeLove 4s ease-in-out infinite alternate;
-    z-index: 1;
-}
-
-@keyframes floatLove {
-    0% { transform: translate(0,0); }
-    100% { transform: translate(0, -50px); }
-}
-
-@keyframes fadeLove {
-    0% { opacity: 0.1; }
-    50% { opacity: 0.3; }
-    100% { opacity: 0.1; }
-}
 </style>
 
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
@@ -171,30 +149,6 @@ function createHeart() {
     }
 }
 setInterval(createHeart, 500);
-
-// Tiny "I love you" watermark
-function createTinyLove() {
-    const love = document.createElement('div');
-    love.classList.add('tiny-love');
-    love.innerText = 'I love you ❤️';
-
-    const x = Math.random() * 550;
-    const y = Math.random() * 550;
-    love.style.left = x + 'px';
-    love.style.top = y + 'px';
-
-    notebook.appendChild(love);
-
-    setTimeout(() => {
-        love.remove();
-        createTinyLove();
-    }, 8000);
-}
-
-// Create multiple tiny loves initially
-for (let i = 0; i < 15; i++) {
-    setTimeout(createTinyLove, i * 400);
-}
 
 // First message
 function showFirstMessage() {
@@ -297,6 +251,38 @@ function showRandomLines() {
 }
 
 setTimeout(showFirstMessage, 1000);
+
+// 🎀 Floating "I love you" watermark inside notebook
+function createWatermarkWord() {
+    const word = document.createElement('div');
+    word.innerText = 'I love you ❤️';
+    word.style.position = 'absolute';
+    word.style.fontSize = `${10 + Math.random() * 12}px`;
+    word.style.color = 'rgba(255,0,0,0.08)';
+    word.style.fontFamily = "'Great Vibes', cursive";
+    word.style.left = `${Math.random() * 90}%`;
+    word.style.top = `${Math.random() * 90}%`;
+    word.style.pointerEvents = 'none';
+    word.style.transition = 'transform 20s linear';
+    word.style.zIndex = 1;
+    notebook.appendChild(word);
+
+    const xMove = (Math.random() - 0.5) * 20;
+    const yMove = (Math.random() - 0.5) * 20;
+
+    setTimeout(() => {
+        word.style.transform = `translate(${xMove}px, ${yMove}px)`;
+    }, 100);
+
+    setTimeout(() => word.remove(), 25000);
+}
+
+setInterval(() => {
+    for(let i=0; i<5; i++){
+        createWatermarkWord();
+    }
+}, 2000);
+
 </script>
 
 <!-- Spotify player -->
