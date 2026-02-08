@@ -251,6 +251,38 @@ function showRandomLines() {
 }
 
 setTimeout(showFirstMessage, 1000);
+
+// 🎀 Floating "I love you" watermark inside notebook
+function createWatermarkWord() {
+    const word = document.createElement('div');
+    word.innerText = 'I love you ❤️';
+    word.style.position = 'absolute';
+    word.style.fontSize = `${10 + Math.random() * 12}px`;
+    word.style.color = 'rgba(255,0,0,0.08)';
+    word.style.fontFamily = "'Great Vibes', cursive";
+    word.style.left = `${Math.random() * 90}%`;
+    word.style.top = `${Math.random() * 90}%`;
+    word.style.pointerEvents = 'none';
+    word.style.transition = 'transform 20s linear';
+    word.style.zIndex = 1;
+    notebook.appendChild(word);
+
+    const xMove = (Math.random() - 0.5) * 20;
+    const yMove = (Math.random() - 0.5) * 20;
+
+    setTimeout(() => {
+        word.style.transform = `translate(${xMove}px, ${yMove}px)`;
+    }, 100);
+
+    setTimeout(() => word.remove(), 25000);
+}
+
+setInterval(() => {
+    for(let i=0; i<5; i++){
+        createWatermarkWord();
+    }
+}, 2000);
+
 </script>
 
 <!-- Spotify player -->
@@ -264,4 +296,3 @@ setTimeout(showFirstMessage, 1000);
 
 </body>
 </html>
- 
