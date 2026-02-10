@@ -10,7 +10,7 @@ body, html {
     padding: 0;
     width: 100%;
     height: 100%;
-    background-color: #000000; /* solid black */
+    background-color: #000000;
     overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -19,6 +19,7 @@ body, html {
     position: absolute;
     width: 600px;
     height: 600px;
+    padding: 20px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -26,7 +27,6 @@ body, html {
     box-shadow: 0 0 30px rgba(0,0,0,0.2);
     overflow: hidden;
     z-index: 2;
-    padding: 40px 20px;
     box-sizing: border-box;
 }
 
@@ -45,102 +45,35 @@ body, html {
 
 .message {
     position: absolute;
-    width: 100%;
+    max-width: 90%;
+    left: 50%;
     text-align: center;
-    top: 40%;
+    color: #ff4d4d;
+    font-family: 'Great Vibes', cursive;
     opacity: 0;
     transition: opacity 1s ease-in-out;
+    word-wrap: break-word;
+    padding: 0 15px;
+    box-sizing: border-box;
     z-index: 4;
-    font-family: 'Great Vibes', cursive;
-    color: #ff4d4d;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 .message.big {
-    font-size: 72px; /* Increased Sweetheart font size */
-    font-weight: bold;
-}
-
-.message.smile {
-    font-size: 72px; /* same as Sweetheart size */
-    font-weight: bold;
+    font-size: 60px;
+    line-height: 1.1;
 }
 
 .message.small {
     font-size: 36px;
+    line-height: 1.3;
 }
 
-.emoji {
-    margin-left: 8px;
-}
-
-#bigHeartDiv {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 120px;
-    cursor: pointer;
-    color: #ff4d4d;
-    user-select: none;
-    animation: pulse 1.5s ease-in-out infinite;
-    z-index: 5;
-    display: none;
-}
-
-@keyframes pulse {
-  0% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-}
-
-/* Sparkle effect behind the big heart (optional) */
-#bigHeartDiv::before {
-    content: '✨';
-    position: absolute;
-    top: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 48px;
-    opacity: 0.6;
-    animation: sparkle 2s infinite ease-in-out;
-    pointer-events: none;
-}
-@keyframes sparkle {
-  0%, 100% {opacity: 0.6;}
-  50% {opacity: 1;}
-}
-
-#finalMessages {
-    position: absolute;
-    top: 40%;
-    width: 100%;
-    text-align: center;
-    font-family: 'Great Vibes', cursive;
-    color: #ff4d4d;
-    opacity: 0;
-    z-index: 6;
-    user-select: none;
-}
-
-#finalValentine {
-    font-size: 48px;
-    margin-bottom: 20px;
-    font-weight: normal;
-}
-
-#finalLove {
-    font-size: 40px;
-    font-weight: normal;
-    color: #ff4d4d;
+@keyframes zoomIn {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
 }
 </style>
 
@@ -150,19 +83,8 @@ body, html {
 
 <div class="notebook" id="notebook"></div>
 
-<div id="bigHeartDiv" title="Touch me ❤️">❤️</div>
-
-<div id="finalMessages">
-    <div id="finalValentine">Happy Valentine’s Day to my forever Valentine</div>
-    <div id="finalLove">Love forever just for you ❤️💞</div>
-</div>
-
 <script>
 const notebook = document.getElementById('notebook');
-const bigHeartDiv = document.getElementById('bigHeartDiv');
-const finalMessages = document.getElementById('finalMessages');
-const finalValentine = document.getElementById('finalValentine');
-const finalLove = document.getElementById('finalLove');
 
 // Floating hearts in background
 function createHeart() {
@@ -188,109 +110,6 @@ function createHeart() {
     }
 }
 setInterval(createHeart, 500);
-
-// Messages sequence
-const journeyLines = [
-    {text: "Your smile is precious to me", emoji: "", className: "smile"}, // bigger font same as sweetheart
-    {text: "A sweet journey of Valentine's week with your smile", emoji: "🌸💖", className: "small"},
-    {text: "Let's continue", emoji: "🥰💞", className: "small"},
-    {text: "You are the one who makes my life bloom and blossom like a rose", emoji: "🌹", className: "small"},
-    {text: "I want to love you forever, and every day my love for you grows.", emoji: "🌹", className: "small"},
-    {text: "You’re so sweet, and my life feels sweeter with you every day more than chocolate.", emoji: "🍫❤️", className: "small"},
-    {text: "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy.", emoji: "🧸❤️", className: "small"},
-    {text: "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same.", emoji: "", className: "small"},
-    {text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special.", emoji: "❤️🤗🥰", className: "small"},
-    {text: "Sending all my love hoping you feel how special you are to me.", emoji: "❤️", className: "small"},
-    {text: "With you, everything feels complete.", emoji: "", className: "small"},
-    {text: "You feel like home to me.", emoji: "", className: "small"},
-    {text: "Just thinking of you makes me smile.", emoji: "", className: "small"},
-    {text: "You are my favorite happiness", emoji: "🥰", className: "small"},
-    {text: "Will you be my Valentine ❤️❤️", emoji: "", className: "small"}
-];
-
-let index = 0;
-
-// Show Sweetheart bigger and longer
-function showSweetheart() {
-    const bigMsg = document.createElement('div');
-    bigMsg.classList.add('message', 'big');
-    bigMsg.innerText = 'Sweetheart 💞';
-    notebook.appendChild(bigMsg);
-    bigMsg.style.top = '40%';
-    setTimeout(() => {
-        bigMsg.style.opacity = 1;
-        setTimeout(() => {
-            bigMsg.style.opacity = 0;
-            setTimeout(() => {
-                bigMsg.remove();
-                showJourneyLines();
-            }, 500);
-        }, 3000); // shown for 3 seconds
-    }, 6000); // show after 6 seconds from page load
-}
-
-function showJourneyLines() {
-    if(index >= journeyLines.length) {
-        showBigHeart();
-        return;
-    }
-    const current = journeyLines[index++];
-    const line = document.createElement('div');
-    line.classList.add('message', current.className);
-    line.style.top = '40%';
-    line.style.opacity = 0;
-
-    line.innerHTML = current.text + (current.emoji ? ` <span class="emoji">${current.emoji}</span>` : '');
-    notebook.appendChild(line);
-
-    setTimeout(() => {
-        line.style.opacity = 1;
-        setTimeout(() => {
-            line.style.opacity = 0;
-            setTimeout(() => {
-                line.remove();
-                setTimeout(showJourneyLines, 3000);
-            }, 500);
-        }, 5000);
-    }, 200);
-}
-
-// Show big heart div after journey lines
-function showBigHeart() {
-    bigHeartDiv.style.display = 'block';
-    bigHeartDiv.style.opacity = '1';
-
-    // After 2 minutes (120000ms), if no touch, show final messages
-    const timeoutID = setTimeout(() => {
-        if(bigHeartDiv.style.display !== 'none'){
-            showFinalMessages();
-        }
-    }, 120000);
-
-    // If touched, remove big heart and show final messages immediately
-    bigHeartDiv.onclick = () => {
-        clearTimeout(timeoutID);
-        bigHeartDiv.style.display = 'none';
-        showFinalMessages();
-    };
-}
-
-// Show final valentine messages
-function showFinalMessages() {
-    finalMessages.style.opacity = 1;
-    // Hide big heart just in case
-    bigHeartDiv.style.display = 'none';
-
-    // Show love message after 3 seconds, both stay visible permanently
-    setTimeout(() => {
-        finalLove.style.opacity = 1;
-    }, 3000);
-}
-
-// Initial opacity setup for finalLove so it fades in
-finalLove.style.opacity = 0;
-
-setTimeout(showSweetheart, 1000);
 
 // Floating subtle "I love you ❤️" watermark inside notebook
 function createWatermarkWord() {
@@ -322,11 +141,117 @@ setInterval(() => {
     }
 }, 2000);
 
-// Floating hearts in background continue
-setInterval(createHeart, 500);
+// First big message - "Sweetheart 💞"
+function showFirstMessage() {
+    const bigMsg = document.createElement('div');
+    bigMsg.classList.add('message', 'big');
+    bigMsg.innerText = 'Sweetheart 💞';
+    notebook.appendChild(bigMsg);
+
+    setTimeout(() => {
+        bigMsg.style.opacity = 1;
+        setTimeout(() => {
+            bigMsg.style.opacity = 0;
+            setTimeout(() => {
+                bigMsg.remove();
+                showValentineJourney();
+            }, 500);
+        }, 3000);
+    }, 6000); // appears 6 sec after loading page
+}
+
+// Journey messages
+const journeyLines = [
+    "Your smile is precious to me 🥰", // normal font, not bold
+    "A sweet journey of Valentine's week with your smile 🌸💖",
+    "Let's continue 🥰💞",
+    "You are the one who makes my life bloom and blossom like a rose 🌹",
+    "I want to love you forever, and every day my love for you grows 💑❤️",
+    "You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️",
+    "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️",
+    "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💕",
+    "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰",
+    "Sending all my love ❤️ hoping you feel how special you are to me",
+    "With you, everything feels complete.",
+    "You feel like home to me.",
+    "Just thinking of you makes me smile.",
+    "You are my favorite happiness 🥰",
+    "Will you be my Valentine?"
+];
+
+function showValentineJourney() {
+    let index = 0;
+    function showLine() {
+        if (index >= journeyLines.length) {
+            setTimeout(showValentineDayMessages, 3000);
+            return;
+        }
+
+        const line = document.createElement('div');
+        line.classList.add('message', 'small');
+        line.innerText = journeyLines[index++];
+        notebook.appendChild(line);
+
+        setTimeout(() => line.style.opacity = 1, 200);
+        setTimeout(() => {
+            line.style.opacity = 0;
+            setTimeout(() => line.remove(), 500);
+        }, 5000); // message visible for 5 sec
+
+        setTimeout(showLine, 8000); // 5 sec display + 3 sec gap
+    }
+    showLine();
+}
+
+// Big heart before final message
+function showValentineDayMessages() {
+    const bigHeart = document.createElement('div');
+    bigHeart.style.position = 'absolute';
+    bigHeart.style.top = '50%';
+    bigHeart.style.left = '50%';
+    bigHeart.style.transform = 'translate(-50%, -50%)';
+    bigHeart.style.fontSize = '150px';
+    bigHeart.style.color = 'red';
+    bigHeart.style.cursor = 'pointer';
+    bigHeart.style.zIndex = 10;
+    bigHeart.innerText = '❤️';
+    notebook.appendChild(bigHeart);
+
+    let messageShown = false;
+
+    function showFinalMessages() {
+        if (messageShown) return;
+        messageShown = true;
+
+        bigHeart.remove();
+
+        const happyMsg = document.createElement('div');
+        happyMsg.classList.add('message', 'big');
+        happyMsg.style.top = '50%';
+        happyMsg.innerText = 'Happy Valentine’s Day to my forever Valentine'; // no emoji
+        notebook.appendChild(happyMsg);
+        happyMsg.style.opacity = 1;
+
+        setTimeout(() => {
+            const loveMsg = document.createElement('div');
+            loveMsg.classList.add('message', 'small');
+            loveMsg.style.top = '60%';
+            loveMsg.innerText = 'Love forever just for you ❤️💞'; // emojis here
+            notebook.appendChild(loveMsg);
+            loveMsg.style.opacity = 1;
+        }, 3000);
+    }
+
+    bigHeart.addEventListener('click', showFinalMessages);
+    bigHeart.addEventListener('touchstart', showFinalMessages);
+
+    // Fallback: show message automatically after 2 minutes
+    setTimeout(showFinalMessages, 120000);
+}
+
+setTimeout(showFirstMessage, 1000);
 </script>
 
-<!-- Spotify player fixed bottom right -->
 <iframe
   style="border-radius:12px; position: fixed; bottom: 20px; right: 20px; width: 300px; height: 80px; z-index: 1000;"
   src="https://open.spotify.com/embed/track/25zwp2av5dhuTfF8dqDGUV?utm_source=generator"
