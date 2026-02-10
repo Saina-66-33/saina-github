@@ -14,7 +14,6 @@ body, html {
     overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 .notebook {
     position: absolute;
     width: 600px;
@@ -29,7 +28,6 @@ body, html {
     z-index: 2;
     box-sizing: border-box;
 }
-
 .heart {
     position: absolute;
     font-size: 24px;
@@ -37,16 +35,15 @@ body, html {
     animation: floatHeart linear infinite;
     z-index: 3;
 }
-
 @keyframes floatHeart {
     0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
     100% { transform: translate(0, -1200px) rotate(360deg); opacity: 0; }
 }
-
 .message {
     position: absolute;
     max-width: 90%;
     left: 50%;
+    transform: translateX(-50%);
     text-align: center;
     color: #ff4d4d;
     font-family: 'Great Vibes', cursive;
@@ -56,113 +53,77 @@ body, html {
     padding: 0 15px;
     box-sizing: border-box;
     z-index: 4;
-    white-space: normal;
+    white-space: pre-line;
     overflow-wrap: break-word;
 }
-
 .message.big {
     font-size: 60px;
     line-height: 1.1;
 }
-
 .message.small {
     font-size: 36px;
     line-height: 1.3;
 }
-
-@keyframes zoomIn {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-}
 </style>
-
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
 </head>
 <body>
-
 <div class="notebook" id="notebook"></div>
-
 <script>
 const notebook = document.getElementById('notebook');
 
-// Floating hearts in background
+// Floating hearts
 function createHeart() {
-    const bunchChance = Math.random();
-    const heartCount = bunchChance < 0.3 ? 6 + Math.floor(Math.random() * 2) : 1;
-
-    for (let i = 0; i < heartCount; i++) {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.innerText = '❤️';
-
-        const x = Math.random() * window.innerWidth + (i * 10);
-        const y = Math.random() * window.innerHeight + (i * 10);
-        heart.style.left = x + 'px';
-        heart.style.top = y + 'px';
-
-        const duration = 5 + Math.random() * 5;
-        heart.style.animationDuration = duration + 's';
-        heart.style.fontSize = (20 + Math.random() * 30) + 'px';
-
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), duration * 1000);
-    }
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerText = '❤️';
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
+    heart.style.left = x + 'px';
+    heart.style.top = y + 'px';
+    const duration = 5 + Math.random() * 5;
+    heart.style.animationDuration = duration + 's';
+    heart.style.fontSize = (20 + Math.random() * 30) + 'px';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), duration*1000);
 }
 setInterval(createHeart, 500);
 
-// Floating subtle "I love you ❤️" watermark inside notebook
+// Watermark
 function createWatermarkWord() {
     const word = document.createElement('div');
     word.innerText = 'I love you ❤️';
     word.style.position = 'absolute';
-    word.style.fontSize = `${10 + Math.random() * 12}px`;
+    word.style.fontSize = `${10 + Math.random()*12}px`;
     word.style.color = 'rgba(255,0,0,0.08)';
     word.style.fontFamily = "'Great Vibes', cursive";
-    word.style.left = `${Math.random() * 90}%`;
-    word.style.top = `${Math.random() * 90}%`;
+    word.style.left = `${Math.random()*90}%`;
+    word.style.top = `${Math.random()*90}%`;
     word.style.pointerEvents = 'none';
     word.style.transition = 'transform 20s linear';
     word.style.zIndex = 1;
     notebook.appendChild(word);
-
-    const xMove = (Math.random() - 0.5) * 20;
-    const yMove = (Math.random() - 0.5) * 20;
-
-    setTimeout(() => {
-        word.style.transform = `translate(${xMove}px, ${yMove}px)`;
-    }, 100);
-
-    setTimeout(() => word.remove(), 25000);
+    setTimeout(()=>{word.style.transform = `translate(${(Math.random()-0.5)*20}px, ${(Math.random()-0.5)*20}px)`;},100);
+    setTimeout(()=>word.remove(),25000);
 }
-setInterval(() => {
-    for(let i=0; i<5; i++){
-        createWatermarkWord();
-    }
-}, 2000);
+setInterval(()=>{for(let i=0;i<5;i++) createWatermarkWord();},2000);
 
-// First big message - "Sweetheart 💞"
+// First message - Sweetheart
 function showFirstMessage() {
-    const bigMsg = document.createElement('div');
-    bigMsg.classList.add('message', 'big');
-    bigMsg.innerText = 'Sweetheart 💞';
-    notebook.appendChild(bigMsg);
-
-    setTimeout(() => {
-        bigMsg.style.opacity = 1;
-        setTimeout(() => {
-            bigMsg.style.opacity = 0;
-            setTimeout(() => {
-                bigMsg.remove();
-                showValentineJourney();
-            }, 500);
-        }, 3000);
-    }, 6000); // appears 6 sec after loading page
+    const msg = document.createElement('div');
+    msg.classList.add('message','big');
+    msg.innerText = 'Sweetheart 💞';
+    notebook.appendChild(msg);
+    setTimeout(()=>{ msg.style.opacity = 1;
+        setTimeout(()=>{ msg.style.opacity=0;
+            setTimeout(()=>{ msg.remove(); showJourney(); },500);
+        },3000);
+    },6000);
 }
 
-// Journey messages
+// Journey messages before Valentine’s Day
 const journeyLines = [
-    "Your smile is precious to me 🥰", // normal font, not bold
+    "Your smile is precious to me 🥰",
     "A sweet journey of Valentine's week with your smile 🌸💖",
     "Let's continue 🥰💞",
     "You are the one who makes my life bloom and blossom like a rose 🌹",
@@ -171,94 +132,84 @@ const journeyLines = [
     "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️",
     "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💕",
     "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰",
-    "Sending all my love ❤️ hoping you feel how special you are to me",
-    "With you, everything feels complete.",
-    "You feel like home to me.",
-    "Just thinking of you makes me smile.",
-    "You are my favorite happiness 🥰",
-    "Will you be my Valentine?"
+    "Sending all my love ❤️ hoping you feel how special you are to me"
 ];
 
-function showValentineJourney() {
-    let index = 0;
+function showJourney() {
+    let index=0;
     function showLine() {
-        if (index >= journeyLines.length) {
-            setTimeout(showValentineDayMessages, 3000);
-            return;
+        if(index>=journeyLines.length){ 
+            setTimeout(showValentineLines,3000); 
+            return; 
         }
-
         const line = document.createElement('div');
-        line.classList.add('message', 'small');
+        line.classList.add('message','small');
         line.innerText = journeyLines[index++];
         notebook.appendChild(line);
-
-        setTimeout(() => line.style.opacity = 1, 200);
-        setTimeout(() => {
-            line.style.opacity = 0;
-            setTimeout(() => line.remove(), 500);
-        }, 5000); // message visible for 5 sec
-
-        setTimeout(showLine, 8000); // 5 sec display + 3 sec gap
+        setTimeout(()=>line.style.opacity=1,200);
+        setTimeout(()=>{ line.style.opacity=0; setTimeout(()=>line.remove(),500); },5000);
+        setTimeout(showLine,8000);
     }
     showLine();
 }
 
-// Big heart before final message
-function showValentineDayMessages() {
-    const bigHeart = document.createElement('div');
-    bigHeart.style.position = 'absolute';
-    bigHeart.style.top = '50%';
-    bigHeart.style.left = '50%';
-    bigHeart.style.transform = 'translate(-50%, -50%)';
-    bigHeart.style.fontSize = '150px';
-    bigHeart.style.color = 'red';
-    bigHeart.style.cursor = 'pointer';
-    bigHeart.style.zIndex = 10;
-    bigHeart.innerText = '❤️';
-    notebook.appendChild(bigHeart);
-
-    let messageShown = false;
-
-    function showFinalMessages() {
-        if (messageShown) return;
-        messageShown = true;
-
-        bigHeart.remove();
-
-        const happyMsg = document.createElement('div');
-        happyMsg.classList.add('message', 'big');
-        happyMsg.style.top = '50%';
-        happyMsg.innerText = 'Happy Valentine’s Day to my forever Valentine'; // no emoji
-        notebook.appendChild(happyMsg);
-        happyMsg.style.opacity = 1;
-
-        setTimeout(() => {
-            const loveMsg = document.createElement('div');
-            loveMsg.classList.add('message', 'small');
-            loveMsg.style.top = '60%';
-            loveMsg.innerText = 'Love forever just for you ❤️💞'; // emojis here
-            notebook.appendChild(loveMsg);
-            loveMsg.style.opacity = 1;
-        }, 3000);
-    }
-
-    bigHeart.addEventListener('click', showFinalMessages);
-    bigHeart.addEventListener('touchstart', showFinalMessages);
-
-    // Fallback: show message automatically after 2 minutes
-    setTimeout(showFinalMessages, 120000);
+// Valentine’s Day lines - appear together in one div
+function showValentineLines() {
+    const valentineText = `With you, everything feels complete.
+You feel like home to me.
+Just thinking of you makes me smile.
+You are my favorite happiness 🥰
+Will you be my Valentine?`;
+    const valLine = document.createElement('div');
+    valLine.classList.add('message','small');
+    valLine.style.top='40%';
+    valLine.innerText = valentineText;
+    notebook.appendChild(valLine);
+    setTimeout(()=>valLine.style.opacity=1,200);
+    setTimeout(()=>{ valLine.style.opacity=0; setTimeout(()=>valLine.remove(),500); },5000);
+    setTimeout(showBigHeart,8000);
 }
 
-setTimeout(showFirstMessage, 1000);
-</script>
+// Big heart before final messages
+function showBigHeart() {
+    const heart = document.createElement('div');
+    heart.style.position='absolute';
+    heart.style.top='50%';
+    heart.style.left='50%';
+    heart.style.transform='translate(-50%,-50%)';
+    heart.style.fontSize='150px';
+    heart.style.color='red';
+    heart.style.cursor='pointer';
+    heart.style.zIndex=10;
+    heart.innerText='❤️';
+    notebook.appendChild(heart);
 
-<iframe
-  style="border-radius:12px; position: fixed; bottom: 20px; right: 20px; width: 300px; height: 80px; z-index: 1000;"
-  src="https://open.spotify.com/embed/track/25zwp2av5dhuTfF8dqDGUV?utm_source=generator"
-  frameborder="0"
-  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-  loading="lazy">
-</iframe>
+    let shown=false;
+    function showFinalMessages(){
+        if(shown) return;
+        shown=true;
+        heart.remove();
 
-</body>
-</html>
+        const happyMsg=document.createElement('div');
+        happyMsg.classList.add('message','big');
+        happyMsg.style.top='50%';
+        happyMsg.innerText='Happy Valentine’s Day to my forever Valentine 🏆';
+        notebook.appendChild(happyMsg);
+        happyMsg.style.opacity=1;
+
+        setTimeout(()=>{
+            const loveMsg=document.createElement('div');
+            loveMsg.classList.add('message','small');
+            loveMsg.style.top='60%';
+            loveMsg.innerText='Love forever just for you ❤️💞';
+            notebook.appendChild(loveMsg);
+            loveMsg.style.opacity=1;
+        },3000);
+    }
+
+    heart.addEventListener('click',showFinalMessages);
+    heart.addEventListener('touchstart',showFinalMessages);
+    setTimeout(showFinalMessages,120000); // fallback 2 min
+}
+
+setTimeout(show
