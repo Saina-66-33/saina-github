@@ -103,11 +103,11 @@ function createHeart() {
 }
 setInterval(createHeart, 500);
 
-// First big message - "Sweetheart❤️"
+// First big message - "Sweetheart 💞"
 function showFirstMessage() {
     const bigMsg = document.createElement('div');
     bigMsg.classList.add('message', 'big');
-    bigMsg.innerText = 'Sweetheart❤️';
+    bigMsg.innerText = 'Sweetheart 💞';
     notebook.appendChild(bigMsg);
 
     setTimeout(() => {
@@ -116,22 +116,23 @@ function showFirstMessage() {
             bigMsg.style.opacity = 0;
             setTimeout(() => {
                 bigMsg.remove();
-                showSecondMessage();
+                showValentineJourney();
             }, 500);
         }, 3000);
     }, 6600);
 }
 
-// Show "Your smile is precious to me" then "A short journey..." then rest messages
+// Messages sequence
 const journeyLines = [
     "Your smile is precious to me",
-    "A short journey of Valentine’s week with your smile and let’s continue 🥰",
+    "A sweet journey of Valentine's week with your smile",
+    "Let's continue 🥰",
     "You make my world bloom and blossom like a rose 🌹",
     "I want to love you forever, and every day my love for you grows.",
     "You are so sweet, and being with you makes my life sweeter every day, just like chocolate."
 ];
 
-function showSecondMessage() {
+function showValentineJourney() {
     let index = 0;
     function showLine() {
         if (index >= journeyLines.length) return;
