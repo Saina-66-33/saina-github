@@ -26,6 +26,7 @@ body, html {
     box-shadow: 0 0 30px rgba(0,0,0,0.2);
     overflow: hidden;
     z-index: 2;
+    padding-top: 20px;
 }
 
 .heart {
@@ -62,13 +63,7 @@ body, html {
     font-size: 36px;
 }
 
-@keyframes zoomIn {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-}
 </style>
-
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
 </head>
 <body>
@@ -103,7 +98,7 @@ function createHeart() {
 }
 setInterval(createHeart, 500);
 
-// Watermark "I love you" inside notebook
+// Floating subtle "I love you ❤️" watermark inside notebook
 function createWatermarkWord() {
     const word = document.createElement('div');
     word.innerText = 'I love you ❤️';
@@ -133,68 +128,53 @@ setInterval(() => {
     }
 }, 2000);
 
-// Pre-Valentine lines (each day)
-const preValentineLines = [
-    "You are the one who makes my life bloom and blossom like a rose 🌹",
-    "I want to love you forever, and every day my love for you grows 💑",
-    "You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️",
-    "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️",
-    "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💌",
-    "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰",
-    "Sending all my love ❤️ hoping you feel how special you are to me 💖"
+// Sequence of messages with timings
+const messages = [
+    { text: "Sweetheart 💞", duration: 3000 },
+    { text: "Your smile is precious to me 🥰✨", duration: 4000 },
+    { text: "A sweet journey of Valentine's week with your smile 🌸💖", duration: 4000 },
+    { text: "Let's continue 🥰💞", duration: 3000 },
+    // Rose Day → Valentine Journey lines
+    { text: "You are the one who makes my life bloom and blossom like a rose 🌹", duration: 4000 },
+    { text: "I want to love you forever, and every day my love for you grows 💑❤️", duration: 4000 },
+    { text: "You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️", duration: 4000 },
+    { text: "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️", duration: 4000 },
+    { text: "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💌", duration: 4000 },
+    { text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", duration: 4000 },
+    { text: "Sending all my love ❤️ hoping you feel how special you are to me 💖", duration: 4000 },
+    // Valentine’s Day lines appear together
+    { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness ❤️\nWill you be my Valentine? 💌", duration: 6000 },
+    // Post-Valentine lines appear together
+    { text: "You are my heart, my peace, and my comfort 💕\nHappy Valentine’s Day to my forever Valentine 🏆", duration: 5000 },
+    // Final line
+    { text: "Love forever just for you ♾️", duration: 5000 }
 ];
 
-// Valentine’s Day lines (appear together)
-const valentineLines = [
-    "With you, everything feels complete 💖",
-    "You feel like home to me 🏠",
-    "Just thinking of you makes me smile 😍",
-    "You are my favorite happiness ❤️",
-    "Will you be my Valentine? 💌"
-];
+function showMessages(index = 0) {
+    if(index >= messages.length) return;
 
-// Post-Valentine lines
-const postValentineLines = [
-    "You are my heart, my peace, and my comfort 💕",
-    "Happy Valentine’s Day to my forever Valentine 🏆"
-];
+    const msgObj = messages[index];
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', 'small');
+    msgDiv.style.top = '40%';
+    msgDiv.style.opacity = 0;
+    msgDiv.style.whiteSpace = "pre-line"; // to support \n for multiple lines
+    msgDiv.innerText = msgObj.text;
+    notebook.appendChild(msgDiv);
 
-// Final line
-const finalLine = "Love forever just for you ♾️";
+    setTimeout(() => msgDiv.style.opacity = 1, 200); // fade in
 
-// Function to show each line with fade-in
-function showLines(lines, delayBetween = 2000, callback) {
-    let i = 0;
-    function next() {
-        if (i >= lines.length) {
-            if (callback) callback();
-            return;
-        }
-        const lineDiv = document.createElement('div');
-        lineDiv.classList.add('message', 'small');
-        lineDiv.style.top = '40%';
-        lineDiv.style.opacity = 0;
-        lineDiv.innerText = lines[i++];
-        notebook.appendChild(lineDiv);
+    setTimeout(() => {
+        msgDiv.style.opacity = 0; // fade out
+        setTimeout(() => msgDiv.remove(), 1000);
+    }, msgObj.duration);
 
-        setTimeout(() => lineDiv.style.opacity = 1, 200);
-        setTimeout(() => next(), delayBetween);
-    }
-    next();
+    setTimeout(() => showMessages(index + 1), msgObj.duration + 1200);
 }
 
-// Start sequence
+// Start sequence after 1s
 setTimeout(() => {
-    showLines(preValentineLines, 4000, () => {
-        // Valentine lines appear together
-        showLines(valentineLines, 1500, () => {
-            // Post-Valentine lines
-            showLines(postValentineLines, 2000, () => {
-                // Final line
-                showLines([finalLine], 3000);
-            });
-        });
-    });
+    showMessages();
 }, 1000);
 </script>
 
