@@ -147,8 +147,8 @@ const messages = [
     { text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "Sending all my love ❤️ hoping you feel how special you are to me 💖", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness 🥰\nWill you be my Valentine? 💌", duration: 6000, gap: 3000, className: 'small' },
-    // Interactive heart before final Valentine line
-    { text: "You are my heart, my peace, and my comfort 💕", duration: 5000, gap: 3000, className: 'small', image: "interactiveHeart" },
+    // Interactive heart triggers after this peace message
+    { text: "You are my heart, my peace, and my comfort 💕", duration: 3000, gap: 3000, className: 'small', image: "interactiveHeart" },
 ];
 
 // Show messages with timing
@@ -169,31 +169,41 @@ function showMessage(index) {
     notebook.appendChild(msgDiv);
 
     setTimeout(()=> msgDiv.style.opacity = 1, 200);
-    setTimeout(()=> {
-        msgDiv.style.opacity = 0;
-        setTimeout(()=> msgDiv.remove(), 1000);
-    }, msgObj.duration);
 
+    // Special handling for the "peace" message
     if(msgObj.image === "interactiveHeart") {
-        const heartDiv = document.createElement('div');
-        heartDiv.classList.add('interactive-heart');
-        heartDiv.innerText = '❤️';
-        notebook.appendChild(heartDiv);
+        setTimeout(() => {
+            msgDiv.style.opacity = 0;
+            setTimeout(()=> msgDiv.remove(), 1000);
 
-        setTimeout(()=> heartDiv.classList.add('show'), 200);
+            // Show heart after peace message disappears
+            const heartDiv = document.createElement('div');
+            heartDiv.classList.add('interactive-heart');
+            heartDiv.innerText = '❤️';
+            notebook.appendChild(heartDiv);
 
-        let autoShowTimeout = setTimeout(()=> {
-            showFinalMessages();
-            heartDiv.classList.remove('show');
-            setTimeout(()=> heartDiv.remove(), 500);
-        }, 3000); // 3s auto show
+            setTimeout(()=> heartDiv.classList.add('show'), 200);
 
-        heartDiv.addEventListener('click', ()=> {
-            clearTimeout(autoShowTimeout);
-            showFinalMessages();
-            heartDiv.classList.remove('show');
-            setTimeout(()=> heartDiv.remove(), 500);
-        });
+            let autoShowTimeout = setTimeout(()=> {
+                showFinalMessages();
+                heartDiv.classList.remove('show');
+                setTimeout(()=> heartDiv.remove(), 500);
+            }, 3000); // auto show after 3s
+
+            heartDiv.addEventListener('click', ()=> {
+                clearTimeout(autoShowTimeout);
+                showFinalMessages();
+                heartDiv.classList.remove('show');
+                setTimeout(()=> heartDiv.remove(), 500);
+            });
+
+        }, msgObj.duration); // Wait for peace message duration
+    } else {
+        // Normal messages fade out after duration
+        setTimeout(()=> {
+            msgDiv.style.opacity = 0;
+            setTimeout(()=> msgDiv.remove(), 1000);
+        }, msgObj.duration);
     }
 
     let nextDelay = (msgObj.gap || 3000) + msgObj.duration;
