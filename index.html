@@ -76,16 +76,18 @@ body, html {
     cursor: pointer;
     z-index: 5;
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    animation: none;
 }
 
 .interactive-heart.show {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
+    animation: blinkHeart 0.6s infinite;
 }
 
-.interactive-heart.hide {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
+@keyframes blinkHeart {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
@@ -147,7 +149,7 @@ const messages = [
     { text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "Sending all my love ❤️ hoping you feel how special you are to me 💖", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness 🥰\nWill you be my Valentine? 💌", duration: 6000, gap: 3000, className: 'small' },
-    // Interactive heart triggers after this peace message
+    // Peace message triggers blinking heart
     { text: "You are my heart, my peace, and my comfort 💕", duration: 3000, gap: 3000, className: 'small', image: "interactiveHeart" },
 ];
 
@@ -176,7 +178,7 @@ function showMessage(index) {
             msgDiv.style.opacity = 0;
             setTimeout(()=> msgDiv.remove(), 1000);
 
-            // Show heart after peace message disappears
+            // Show blinking heart
             const heartDiv = document.createElement('div');
             heartDiv.classList.add('interactive-heart');
             heartDiv.innerText = '❤️';
@@ -184,12 +186,14 @@ function showMessage(index) {
 
             setTimeout(()=> heartDiv.classList.add('show'), 200);
 
+            // Auto hide after 3s and show final messages
             let autoShowTimeout = setTimeout(()=> {
                 showFinalMessages();
                 heartDiv.classList.remove('show');
                 setTimeout(()=> heartDiv.remove(), 500);
-            }, 3000); // auto show after 3s
+            }, 3000); // heart blinks for 3 sec
 
+            // Click also triggers final messages immediately
             heartDiv.addEventListener('click', ()=> {
                 clearTimeout(autoShowTimeout);
                 showFinalMessages();
