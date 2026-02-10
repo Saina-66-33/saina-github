@@ -75,21 +75,73 @@ body, html {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    background: url('https://i.ibb.co/3R7v7rG/big-heart.png') no-repeat center/contain;
     cursor: pointer;
     z-index: 5;
     transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+    filter: drop-shadow(0 0 5px #ff4d4d);
 }
 
-.interactive-heart.show {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
+/* Pure CSS heart shape */
+.interactive-heart::before,
+.interactive-heart::after {
+    content: "";
+    position: absolute;
+    width: 150px;
+    height: 240px;
+    background: #ff4d4d;
+    border-radius: 150px 150px 0 0;
+    top: 0;
+    left: 75px;
+    transform-origin: bottom left;
+    animation: pulse 2s infinite ease-in-out alternate;
 }
 
-.interactive-heart.hide {
-    transform: translate(-50%, -50%) scale(0);
-    opacity: 0;
+.interactive-heart::after {
+    left: 0;
+    transform-origin: bottom right;
+    animation-delay: 1s;
 }
+
+.interactive-heart::before {
+    transform: rotate(-45deg);
+}
+
+.interactive-heart::after {
+    transform: rotate(45deg);
+}
+
+/* Pulse animation for heart */
+@keyframes pulse {
+    0% { transform: rotate(45deg) scale(1); filter: drop-shadow(0 0 6px #ff4d4d); }
+    100% { transform: rotate(45deg) scale(1.1); filter: drop-shadow(0 0 15px #ff0000); }
+}
+
+/* Sparkle container */
+.sparkles {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+}
+
+/* Individual sparkle */
+.sparkle {
+    position: absolute;
+    background: radial-gradient(circle, #fff 60%, transparent 80%);
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: sparkleAnim 1.5s infinite alternate;
+}
+
+@keyframes sparkleAnim {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
 </head>
@@ -100,7 +152,7 @@ body, html {
 <script>
 const notebook = document.getElementById('notebook');
 
-// Floating hearts
+// Floating hearts background
 function createHeart() {
     const heart = document.createElement('div');
     heart.classList.add('heart');
@@ -136,7 +188,7 @@ function createWatermarkWord() {
 }
 setInterval(() => { for(let i=0;i<5;i++){ createWatermarkWord(); } }, 2000);
 
-// Messages array
+// Messages array with durations and gaps
 const messages = [
     { text: "Sweetheart 💞", duration: 3000 },
     { text: "Your smile is precious to me 🥰✨", duration: 5000, gap: 3000 },
@@ -153,7 +205,7 @@ const messages = [
     { text: "You are my heart, my peace, and my comfort 💕", duration: 5000, gap: 3000, heartAfter:true }
 ];
 
-// Show messages
+// Show messages with timing
 let currentIndex = 0;
 
 function showMessage(index){
@@ -183,21 +235,61 @@ function showMessage(index){
     setTimeout(()=> showMessage(index+1), nextDelay);
 }
 
-// Interactive heart logic
+// Create sparkle elements around heart
+function createSparkles(container){
+    const sparkleCount = 15;
+    for(let i=0; i<sparkleCount; i++){
+        const sparkle = document.createElement('div');
+        sparkle.classList.add('sparkle');
+        sparkle.style.width = sparkle.style.height = (5 + Math.random()*5) + 'px';
+        sparkle.style.top = (Math.random() * 300) + 'px';
+        sparkle.style.left = (Math.random() * 300) + 'px';
+        sparkle.style.animationDelay = (Math.random() * 1.5) + 's';
+        container.appendChild(sparkle);
+    }
+}
+
+// Show big sparkling heart
 function showInteractiveHeart(){
     const heartDiv = document.createElement('div');
     heartDiv.classList.add('interactive-heart');
     notebook.appendChild(heartDiv);
-    setTimeout(()=> heartDiv.classList.add('show'), 100);
 
-    let autoTimeout = setTimeout(()=> revealFinalMessage(), 2000);
+    // Sparkles container
+    const sparkles = document.createElement('div');
+    sparkles.classList.add('sparkles');
+    notebook.appendChild(sparkles);
+    createSparkles(sparkles);
 
-    heartDiv.addEventListener('click', ()=>{
+    // Animate heart scale in
+    setTimeout(() => {
+        heartDiv.style.transform = "translate(-50%, -50%) scale(1)";
+        heartDiv.style.opacity = 1;
+        sparkles.style.opacity = 1;
+    }, 100);
+
+    // Auto reveal final message after 2 minutes (120000ms)
+    let autoTimeout = setTimeout(() => {
+        revealFinalMessage();
+        hideHeartAndSparkles();
+    }, 120000);
+
+    // On click, reveal final message immediately
+    heartDiv.addEventListener('click', () => {
         clearTimeout(autoTimeout);
         revealFinalMessage();
-        heartDiv.classList.remove('show');
-        setTimeout(()=> heartDiv.remove(),1000);
+        hideHeartAndSparkles();
     });
+
+    function hideHeartAndSparkles(){
+        heartDiv.style.transform = "translate(-50%, -50%) scale(0)";
+        heartDiv.style.opacity = 0;
+        sparkles.style.opacity = 0;
+        setTimeout(() => {
+            heartDiv.remove();
+            sparkles.remove();
+        }, 1000);
+    }
 }
 
 // Show final messages
@@ -209,20 +301,21 @@ function revealFinalMessage(){
     finalMsg.style.whiteSpace = "pre-line";
     finalMsg.innerText = "Happy Valentine’s Day to my forever Valentine 🏆❤️";
     notebook.appendChild(finalMsg);
-    setTimeout(()=> finalMsg.style.opacity=1,200);
+    setTimeout(() => finalMsg.style.opacity = 1, 200);
 
-    setTimeout(()=>{
+    setTimeout(() => {
         const loveForever = document.createElement('div');
         loveForever.classList.add('message','final');
         loveForever.style.top = '55%';
         loveForever.style.opacity = 0;
         loveForever.innerText = "Love forever just for you 💞";
         notebook.appendChild(loveForever);
-        setTimeout(()=> loveForever.style.opacity=1,200);
+        setTimeout(() => loveForever.style.opacity = 1, 200);
     }, 3000);
 }
 
-setTimeout(()=> showMessage(0), 6000);
+// Start after 6 seconds
+setTimeout(() => showMessage(0), 6000);
 </script>
 
 <!-- Spotify player -->
