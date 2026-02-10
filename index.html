@@ -155,7 +155,13 @@ function showMessages(index = 0) {
 
     const msgObj = messages[index];
     const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message', 'small');
+    // Sweetheart is big, others small
+    if(index === 0) {
+        msgDiv.classList.add('message', 'big'); // Sweetheart 💞 is big
+    } else {
+        msgDiv.classList.add('message', 'small'); // all others small
+    }
+
     msgDiv.style.top = '40%';
     msgDiv.style.opacity = 0;
     msgDiv.style.whiteSpace = "pre-line"; // to support \n for multiple lines
