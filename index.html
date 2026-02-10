@@ -103,59 +103,7 @@ function createHeart() {
 }
 setInterval(createHeart, 500);
 
-// First big message - "Sweetheart 💞"
-function showFirstMessage() {
-    const bigMsg = document.createElement('div');
-    bigMsg.classList.add('message', 'big');
-    bigMsg.innerText = 'Sweetheart 💞';
-    notebook.appendChild(bigMsg);
-
-    setTimeout(() => {
-        bigMsg.style.opacity = 1;
-        setTimeout(() => {
-            bigMsg.style.opacity = 0;
-            setTimeout(() => {
-                bigMsg.remove();
-                showValentineJourney();
-            }, 500);
-        }, 3000);
-    }, 6600);
-}
-
-// Messages sequence
-const journeyLines = [
-    "Your smile is precious to me 🥰✨",
-    "A sweet journey of Valentine's week with your smile 🌸💖",
-    "Let's continue 🥰💞",
-    "You make my world bloom and blossom like a rose 🌹🌷",
-    "I want to love you forever, and every day my love for you grows 💑❤️",
-    "You are so sweet, and being with you makes my life sweeter every day, just like chocolate 🍫💕"
-];
-
-function showValentineJourney() {
-    let index = 0;
-    function showLine() {
-        if (index >= journeyLines.length) return;
-
-        const line = document.createElement('div');
-        line.classList.add('message', 'small');
-        line.style.top = '40%';
-        line.style.opacity = 0;
-        line.innerText = journeyLines[index++];
-        notebook.appendChild(line);
-
-        setTimeout(() => line.style.opacity = 1, 200);
-        setTimeout(() => {
-            line.style.opacity = 0;
-            setTimeout(() => line.remove(), 500);
-        }, 6000);
-
-        setTimeout(showLine, 7000);
-    }
-    showLine();
-}
-
-// Floating subtle "I love you ❤️" watermark inside notebook
+// Watermark "I love you" inside notebook
 function createWatermarkWord() {
     const word = document.createElement('div');
     word.innerText = 'I love you ❤️';
@@ -185,7 +133,69 @@ setInterval(() => {
     }
 }, 2000);
 
-setTimeout(showFirstMessage, 1000);
+// Pre-Valentine lines (each day)
+const preValentineLines = [
+    "You are the one who makes my life bloom and blossom like a rose 🌹",
+    "I want to love you forever, and every day my love for you grows 💑",
+    "You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️",
+    "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️",
+    "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💌",
+    "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰",
+    "Sending all my love ❤️ hoping you feel how special you are to me 💖"
+];
+
+// Valentine’s Day lines (appear together)
+const valentineLines = [
+    "With you, everything feels complete 💖",
+    "You feel like home to me 🏠",
+    "Just thinking of you makes me smile 😍",
+    "You are my favorite happiness ❤️",
+    "Will you be my Valentine? 💌"
+];
+
+// Post-Valentine lines
+const postValentineLines = [
+    "You are my heart, my peace, and my comfort 💕",
+    "Happy Valentine’s Day to my forever Valentine 🏆"
+];
+
+// Final line
+const finalLine = "Love forever just for you ♾️";
+
+// Function to show each line with fade-in
+function showLines(lines, delayBetween = 2000, callback) {
+    let i = 0;
+    function next() {
+        if (i >= lines.length) {
+            if (callback) callback();
+            return;
+        }
+        const lineDiv = document.createElement('div');
+        lineDiv.classList.add('message', 'small');
+        lineDiv.style.top = '40%';
+        lineDiv.style.opacity = 0;
+        lineDiv.innerText = lines[i++];
+        notebook.appendChild(lineDiv);
+
+        setTimeout(() => lineDiv.style.opacity = 1, 200);
+        setTimeout(() => next(), delayBetween);
+    }
+    next();
+}
+
+// Start sequence
+setTimeout(() => {
+    showLines(preValentineLines, 4000, () => {
+        // Valentine lines appear together
+        showLines(valentineLines, 1500, () => {
+            // Post-Valentine lines
+            showLines(postValentineLines, 2000, () => {
+                // Final line
+                showLines([finalLine], 3000);
+            });
+        });
+    });
+}, 1000);
 </script>
 
 <!-- Spotify player fixed bottom right -->
