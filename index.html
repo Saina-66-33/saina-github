@@ -10,7 +10,7 @@ body, html {
     padding: 0;
     width: 100%;
     height: 100%;
-    background-color: #000000; /* solid black */
+    background-color: #000000;
     overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -63,6 +63,28 @@ body, html {
     font-size: 36px;
 }
 
+.interactive-heart {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: url('https://i.ibb.co/3R7v7rG/big-heart.png') no-repeat center/contain;
+    cursor: pointer;
+    z-index: 5;
+    transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+}
+
+.interactive-heart.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+.interactive-heart.hide {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
 </head>
@@ -75,30 +97,20 @@ const notebook = document.getElementById('notebook');
 
 // Floating hearts in background
 function createHeart() {
-    const bunchChance = Math.random();
-    const heartCount = bunchChance < 0.3 ? 6 + Math.floor(Math.random() * 2) : 1;
-
-    for (let i = 0; i < heartCount; i++) {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.innerText = '❤️';
-
-        const x = Math.random() * window.innerWidth + (i * 10);
-        const y = Math.random() * window.innerHeight + (i * 10);
-        heart.style.left = x + 'px';
-        heart.style.top = y + 'px';
-
-        const duration = 5 + Math.random() * 5;
-        heart.style.animationDuration = duration + 's';
-        heart.style.fontSize = (20 + Math.random() * 30) + 'px';
-
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), duration * 1000);
-    }
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerText = '❤️';
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.top = Math.random() * window.innerHeight + 'px';
+    heart.style.fontSize = (20 + Math.random() * 30) + 'px';
+    const duration = 5 + Math.random() * 5;
+    heart.style.animationDuration = duration + 's';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), duration * 1000);
 }
 setInterval(createHeart, 500);
 
-// Floating subtle "I love you ❤️" watermark inside notebook
+// Watermark
 function createWatermarkWord() {
     const word = document.createElement('div');
     word.innerText = 'I love you ❤️';
@@ -112,76 +124,92 @@ function createWatermarkWord() {
     word.style.transition = 'transform 20s linear';
     word.style.zIndex = 1;
     notebook.appendChild(word);
-
     const xMove = (Math.random() - 0.5) * 20;
     const yMove = (Math.random() - 0.5) * 20;
-
-    setTimeout(() => {
-        word.style.transform = `translate(${xMove}px, ${yMove}px)`;
-    }, 100);
-
+    setTimeout(() => { word.style.transform = `translate(${xMove}px, ${yMove}px)`; }, 100);
     setTimeout(() => word.remove(), 25000);
 }
-setInterval(() => {
-    for(let i=0; i<5; i++){
-        createWatermarkWord();
-    }
-}, 2000);
+setInterval(() => { for(let i=0;i<5;i++){ createWatermarkWord(); } }, 2000);
 
-// Sequence of messages with timings
+// Messages with optional images
 const messages = [
     { text: "Sweetheart 💞", duration: 3000 },
-    { text: "Your smile is precious to me 🥰✨", duration: 4000 },
-    { text: "A sweet journey of Valentine's week with your smile 🌸💖", duration: 4000 },
-    { text: "Let's continue 🥰💞", duration: 3000 },
-    // Rose Day → Valentine Journey lines
-    { text: "You are the one who makes my life bloom and blossom like a rose 🌹", duration: 4000 },
-    { text: "I want to love you forever, and every day my love for you grows 💑❤️", duration: 4000 },
-    { text: "You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️", duration: 4000 },
-    { text: "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️", duration: 4000 },
-    { text: "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💌", duration: 4000 },
-    { text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", duration: 4000 },
-    { text: "Sending all my love ❤️ hoping you feel how special you are to me 💖", duration: 4000 },
-    // Valentine’s Day lines appear together
-    { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness ❤️\nWill you be my Valentine? 💌", duration: 6000 },
-    // Post-Valentine lines appear together
-    { text: "You are my heart, my peace, and my comfort 💕\nHappy Valentine’s Day to my forever Valentine 🏆", duration: 5000 },
-    // Final line
+    { text: "Your smile is precious to me 🥰✨", duration: 5000, gap: 3000 },
+    { text: "A sweet journey of Valentine's week with your smile 🌸💖", duration: 5000, gap: 3000 },
+    { text: "Let's continue 🥰💞", duration: 5000, gap: 3000 },
+    { text: "You are the one who makes my life bloom and blossom like a rose 🌹", duration: 5000, gap: 3000 },
+    { text: "I want to love you forever, and every day my love for you grows 💑❤️", duration: 5000, gap: 3000 },
+    { text: "You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️", duration: 5000, gap: 3000 },
+    { text: "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️", duration: 5000, gap: 3000 },
+    { text: "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💌", duration: 5000, gap: 3000 },
+    { text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", duration: 5000, gap: 3000 },
+    { text: "Sending all my love ❤️ hoping you feel how special you are to me 💖", duration: 5000, gap: 3000 },
+    { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness ❤️\nWill you be my Valentine? 💌", duration: 6000, gap: 3000 },
+    // Interactive heart before final Valentine line
+    { text: "You are my heart, my peace, and my comfort 💕", duration: 5000, gap: 3000, image: "bigHeart" },
     { text: "Love forever just for you ♾️", duration: 5000 }
 ];
 
-function showMessages(index = 0) {
+// Show messages with timing
+let currentIndex = 0;
+
+function showMessage(index) {
     if(index >= messages.length) return;
 
     const msgObj = messages[index];
     const msgDiv = document.createElement('div');
-    // Sweetheart is big, others small
-    if(index === 0) {
-        msgDiv.classList.add('message', 'big'); // Sweetheart 💞 is big
-    } else {
-        msgDiv.classList.add('message', 'small'); // all others small
-    }
-
+    if(index === 0) msgDiv.classList.add('message','big');
+    else msgDiv.classList.add('message','small');
     msgDiv.style.top = '40%';
     msgDiv.style.opacity = 0;
-    msgDiv.style.whiteSpace = "pre-line"; // to support \n for multiple lines
+    msgDiv.style.whiteSpace = "pre-line";
     msgDiv.innerText = msgObj.text;
     notebook.appendChild(msgDiv);
 
-    setTimeout(() => msgDiv.style.opacity = 1, 200); // fade in
-
-    setTimeout(() => {
-        msgDiv.style.opacity = 0; // fade out
-        setTimeout(() => msgDiv.remove(), 1000);
+    setTimeout(()=> msgDiv.style.opacity = 1, 200);
+    setTimeout(()=> {
+        msgDiv.style.opacity = 0;
+        setTimeout(()=> msgDiv.remove(), 1000);
     }, msgObj.duration);
 
-    setTimeout(() => showMessages(index + 1), msgObj.duration + 1200);
+    // If image is specified
+    if(msgObj.image === "bigHeart") {
+        const heartImg = document.createElement('div');
+        heartImg.classList.add('interactive-heart');
+        notebook.appendChild(heartImg);
+        setTimeout(()=> heartImg.classList.add('show'), 200); // show animation
+
+        let autoMessageTimeout = setTimeout(() => {
+            showMessageInline("Happy Valentine’s Day to my forever Valentine 🏆");
+            heartImg.classList.remove('show');
+            setTimeout(()=> heartImg.remove(),1000);
+        }, 120000); // 2 minutes auto-show
+
+        heartImg.addEventListener('click', ()=>{
+            clearTimeout(autoMessageTimeout);
+            showMessageInline("Happy Valentine’s Day to my forever Valentine 🏆");
+            heartImg.classList.remove('show');
+            setTimeout(()=> heartImg.remove(),1000);
+        });
+    }
+
+    let nextDelay = (msgObj.gap || 3000) + msgObj.duration;
+    setTimeout(()=> showMessage(index+1), nextDelay);
 }
 
-// Start sequence after 1s
-setTimeout(() => {
-    showMessages();
-}, 1000);
+// Inline messages for heart interaction
+function showMessageInline(text){
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message','small');
+    msgDiv.style.top = '50%';
+    msgDiv.style.opacity = 0;
+    msgDiv.style.whiteSpace = "pre-line";
+    msgDiv.innerText = text;
+    notebook.appendChild(msgDiv);
+    setTimeout(()=> msgDiv.style.opacity=1,200);
+}
+
+setTimeout(()=> showMessage(0), 6000); // Sweetheart 6s after page load
 </script>
 
 <!-- Spotify player fixed bottom right -->
