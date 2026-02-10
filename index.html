@@ -1,10 +1,109 @@
-<script>
-// Remove center heart feature
-// No need for showCenterHeart() or #center-heart related code
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Valentine Surprise</title>
+<style>
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000000; /* solid black */
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
+.notebook {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    box-shadow: 0 0 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    z-index: 2;
+}
+
+.heart {
+    position: absolute;
+    font-size: 24px;
+    pointer-events: none;
+    animation: floatHeart linear infinite;
+    z-index: 3;
+}
+
+@keyframes floatHeart {
+    0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(0, -1200px) rotate(360deg); opacity: 0; }
+}
+
+.message {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 40%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 4;
+    font-family: 'Great Vibes', cursive;
+    color: #ff4d4d;
+}
+
+.message.big {
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.message.small {
+    font-size: 36px;
+}
+
+@keyframes zoomIn {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="notebook" id="notebook"></div>
+
+<script>
 const notebook = document.getElementById('notebook');
 
-// First message (unchanged)
+// Floating hearts in background
+function createHeart() {
+    const bunchChance = Math.random();
+    const heartCount = bunchChance < 0.3 ? 6 + Math.floor(Math.random() * 2) : 1;
+
+    for (let i = 0; i < heartCount; i++) {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerText = '❤️';
+
+        const x = Math.random() * window.innerWidth + (i * 10);
+        const y = Math.random() * window.innerHeight + (i * 10);
+        heart.style.left = x + 'px';
+        heart.style.top = y + 'px';
+
+        const duration = 5 + Math.random() * 5;
+        heart.style.animationDuration = duration + 's';
+        heart.style.fontSize = (20 + Math.random() * 30) + 'px';
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), duration * 1000);
+    }
+}
+setInterval(createHeart, 500);
+
+// First message - "My Love ❤️❤️" (unchanged)
 function showFirstMessage() {
     const bigMsg = document.createElement('div');
     bigMsg.classList.add('message', 'big');
@@ -17,13 +116,13 @@ function showFirstMessage() {
             bigMsg.style.opacity = 0;
             setTimeout(() => {
                 bigMsg.remove();
-                showValentineJourney(); // call new journey function
+                showValentineJourney();
             }, 500);
         }, 3000);
-    }, 1000); // fade in after 1 sec
+    }, 6600);
 }
 
-// New function: Valentine Week messages
+// Valentine week messages, appear one by one with fade
 const journeyLines = [
     "A short journey of Valentine’s week with your smile and let’s continue 🥰",
     "You make my world bloom and blossom like a rose 🌹",
@@ -34,32 +133,27 @@ const journeyLines = [
 function showValentineJourney() {
     let index = 0;
     function showLine() {
-        if(index >= journeyLines.length) return;
+        if (index >= journeyLines.length) return;
 
         const line = document.createElement('div');
         line.classList.add('message', 'small');
-        line.style.top = "40%"; // center-ish
+        line.style.top = '40%';
+        line.style.opacity = 0;
         line.innerText = journeyLines[index++];
         notebook.appendChild(line);
 
-        // Fade in
         setTimeout(() => line.style.opacity = 1, 200);
-        // Fade out after 5 sec
         setTimeout(() => {
             line.style.opacity = 0;
             setTimeout(() => line.remove(), 500);
-        }, 5000);
+        }, 6000);
 
-        // Show next line after 5.5 sec
-        setTimeout(showLine, 5500);
+        setTimeout(showLine, 7000);
     }
     showLine();
 }
 
-// Start the first message
-setTimeout(showFirstMessage, 1000);
-
-// Floating "I love you" watermarks remain unchanged
+// Floating subtle "I love you ❤️" watermark inside notebook
 function createWatermarkWord() {
     const word = document.createElement('div');
     word.innerText = 'I love you ❤️';
@@ -83,11 +177,23 @@ function createWatermarkWord() {
 
     setTimeout(() => word.remove(), 25000);
 }
-
 setInterval(() => {
     for(let i=0; i<5; i++){
         createWatermarkWord();
     }
 }, 2000);
 
+setTimeout(showFirstMessage, 1000);
 </script>
+
+<!-- Spotify player fixed bottom right -->
+<iframe
+  style="border-radius:12px; position: fixed; bottom: 20px; right: 20px; width: 300px; height: 80px; z-index: 1000;"
+  src="https://open.spotify.com/embed/track/25zwp2av5dhuTfF8dqDGUV?utm_source=generator"
+  frameborder="0"
+  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+  loading="lazy">
+</iframe>
+
+</body>
+</html>
