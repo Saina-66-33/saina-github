@@ -5,87 +5,91 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Valentine Surprise</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
 
 <style>
-html,body{
-    margin:0;
-    padding:0;
-    width:100%;
-    height:100%;
-    background:black;
-    overflow:hidden;
-    font-family:'Segoe UI',sans-serif;
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.notebook{
-    position:absolute;
-    width:600px;
-    height:600px;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    background:white;
-    box-shadow:0 0 30px rgba(0,0,0,.3);
-    overflow:hidden;
+.notebook {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    box-shadow: 0 0 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    z-index: 2;
 }
 
-.message{
-    position:absolute;
-    width:100%;
-    padding:0 40px;
-    text-align:center;
-    top:40%;
-    opacity:0;
-    color:#ff4d4d;
-    font-family:'Great Vibes',cursive;
-    transition:opacity 1s;
-    box-sizing:border-box;
-    white-space:pre-line;
+/* floating background hearts */
+.heart {
+    position: absolute;
+    pointer-events: none;
+    animation: floatHeart linear infinite;
+    z-index: 3;
+}
+@keyframes floatHeart {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-1200px); opacity: 0; }
 }
 
-.big{
-    font-size:66px;
-    font-weight:bold;
+/* watermark */
+.watermark {
+    position: absolute;
+    font-family: 'Great Vibes', cursive;
+    color: rgba(255,0,0,0.08);
+    pointer-events: none;
+    z-index: 1;
+    animation: drift 20s linear infinite;
+}
+@keyframes drift {
+    from { transform: translate(0,0); }
+    to { transform: translate(20px, -20px); }
 }
 
-.medium{
-    font-size:40px;
+.message {
+    position: absolute;
+    width: 90%;
+    left: 5%;
+    text-align: center;
+    top: 40%;
+    opacity: 0;
+    transition: opacity 1s ease;
+    font-family: 'Great Vibes', cursive;
+    color: #ff4d4d;
+    word-wrap: break-word;
 }
 
-.small{
-    font-size:34px;
-}
+.big { font-size: 64px; font-weight: bold; }
+.mid { font-size: 44px; }
+.small { font-size: 36px; }
 
-.smaller{
-    font-size:30px;
-}
+.final { opacity: 1 !important; }
 
-.heart{
-    position:absolute;
-    font-size:24px;
-    animation:float 6s linear infinite;
-    pointer-events:none;
+.blink-heart {
+    position: absolute;
+    font-size: 120px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: blink 1s infinite;
+    z-index: 5;
+    cursor: pointer;
 }
-
-@keyframes float{
-    0%{transform:translateY(0);opacity:1;}
-    100%{transform:translateY(-1200px);opacity:0;}
-}
-
-.center-heart{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    font-size:140px;
-    animation:blink 1s infinite;
-    cursor:pointer;
-}
-
-@keyframes blink{
-    0%,100%{opacity:1;}
-    50%{opacity:.3;}
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
 }
 </style>
 </head>
@@ -95,96 +99,112 @@ html,body{
 <div class="notebook" id="notebook"></div>
 
 <script>
-const notebook=document.getElementById("notebook");
+const notebook = document.getElementById("notebook");
 
-function floatingHeart(){
-    const h=document.createElement("div");
-    h.className="heart";
-    h.innerText="❤️";
-    h.style.left=Math.random()*100+"%";
-    h.style.top="100%";
-    h.style.fontSize=20+Math.random()*25+"px";
+/* background hearts */
+setInterval(() => {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerText = "❤️";
+    h.style.left = Math.random()*100 + "%";
+    h.style.top = "100%";
+    h.style.fontSize = (20 + Math.random()*30) + "px";
+    h.style.animationDuration = (5 + Math.random()*5) + "s";
     document.body.appendChild(h);
-    setTimeout(()=>h.remove(),6000);
-}
-setInterval(floatingHeart,500);
+    setTimeout(()=>h.remove(),10000);
+}, 500);
 
-const messages=[
-{t:"Sweetheart 💞",cls:"big",d:3000},
-{t:"Your smile is precious to me 🥰✨",cls:"medium",d:5000},
-{t:"A sweet journey of Valentine's week with your smile 🌸💖",cls:"small",d:5000},
-{t:"Let's continue 🥰💞",cls:"small",d:5000},
-{t:"You are the one who makes my life bloom and blossom like a rose 🌹",cls:"small",d:5000},
-{t:"I want to love you forever, and every day my love for you grows 💑❤️",cls:"small",d:5000},
-{t:"You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️",cls:"small",d:5000},
-{t:"My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️",cls:"small",d:5000},
-{t:"Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💌",cls:"smaller",d:5000},
-{t:"Distance doesn’t matter—here’s a hug full of love ❤️🤗🥰",cls:"small",d:5000},
-{t:"Sending all my love ❤️ hoping you feel how special you are to me 💖",cls:"small",d:5000},
-{t:"With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness 🥰\nWill you be my Valentine? 💌",cls:"small",d:6000},
-{t:"You are my heart, my peace, and my comfort 💕",cls:"small",d:5000}
+/* watermark inside notebook */
+function createWatermark(){
+    const w = document.createElement("div");
+    w.className = "watermark";
+    w.innerText = "I love you ❤️";
+    w.style.fontSize = (10 + Math.random()*12) + "px";
+    w.style.left = Math.random()*90 + "%";
+    w.style.top = Math.random()*90 + "%";
+    notebook.appendChild(w);
+    setTimeout(()=>w.remove(),25000);
+}
+setInterval(()=>{ for(let i=0;i<5;i++) createWatermark(); },2000);
+
+const messages = [
+    { text:"Sweetheart 💞", cls:"big", time:3000 },
+    { text:"Your smile is precious to me 🥰✨", cls:"mid", time:5000 },
+    { text:"A sweet journey of Valentine's week with your smile 🌸💖", cls:"small", time:5000 },
+    { text:"Let's continue 🥰💞", cls:"small", time:5000 },
+    { text:"You are the one who makes my life bloom and blossom like a rose 🌹", cls:"small", time:5000 },
+    { text:"I want to love you forever, and every day my love for you grows 💑❤️", cls:"small", time:5000 },
+    { text:"You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️", cls:"small", time:5000 },
+    { text:"My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️", cls:"small", time:5000 },
+
+    { 
+      text:"Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💌",
+      cls:"small",
+      time:5000,
+      style:"font-size:28px;"
+    },
+
+    { text:"Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", cls:"small", time:5000 },
+    { text:"Sending all my love ❤️ hoping you feel how special you are to me 💖", cls:"small", time:5000 },
+
+    {
+      text:"With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness 🥰\nWill you be my Valentine? 💌",
+      cls:"small",
+      time:7000
+    },
+
+    { text:"You are my heart, my peace, and my comfort 💕", cls:"small", time:5000 }
 ];
 
-let i=0;
+let i = 0;
 
-function showNext(){
-if(i>=messages.length){
-showHeart();
-return;
-}
+function showNext() {
+    if(i >= messages.length) return;
+    const m = messages[i++];
+    const d = document.createElement("div");
+    d.className = "message " + m.cls;
+    if(m.style) d.style.cssText = m.style;
+    d.innerText = m.text;
+    notebook.appendChild(d);
 
-const m=messages[i];
-const div=document.createElement("div");
-div.className=`message ${m.cls}`;
-div.innerText=m.t;
-notebook.appendChild(div);
-
-setTimeout(()=>div.style.opacity=1,100);
-setTimeout(()=>{
-div.style.opacity=0;
-setTimeout(()=>div.remove(),1000);
-},m.d);
-
-i++;
-setTimeout(showNext,m.d+3000);
-}
-
-function showHeart(){
-const heart=document.createElement("div");
-heart.className="center-heart";
-heart.innerText="❤️";
-notebook.appendChild(heart);
-
-function showFinal(){
-heart.remove();
-
-const final=document.createElement("div");
-final.className="message small";
-final.style.opacity=1;
-final.style.top="42%";
-final.innerText="Happy Valentine’s Day to my forever Valentine";
-notebook.appendChild(final);
-
-setTimeout(()=>{
-const love=document.createElement("div");
-love.className="message small";
-love.style.opacity=1;
-love.style.top="52%";
-love.innerText="Love forever just for you ❤️💞";
-notebook.appendChild(love);
-},3000);
-}
-
-heart.onclick=showFinal;
-setTimeout(showFinal,3000);
+    setTimeout(()=>d.style.opacity=1,100);
+    setTimeout(()=>{
+        d.style.opacity=0;
+        setTimeout(()=>d.remove(),800);
+        showNext();
+    }, m.time + 3000);
 }
 
 setTimeout(showNext,6000);
-</script>
 
-<iframe style="position:fixed;bottom:20px;right:20px;width:300px;height:80px;border-radius:12px;"
-src="https://open.spotify.com/embed/track/25zwp2av5dhuTfF8dqDGUV"
-allow="autoplay; encrypted-media"></iframe>
+/* final heart + permanent text */
+setTimeout(()=>{
+    const heart = document.createElement("div");
+    heart.className="blink-heart";
+    heart.innerText="❤️";
+    notebook.appendChild(heart);
+
+    const showFinal = () => {
+        heart.remove();
+
+        const hvd = document.createElement("div");
+        hvd.className="message small final";
+        hvd.style.top="45%";
+        hvd.innerText="Happy Valentine’s Day to my forever Valentine";
+        notebook.appendChild(hvd);
+
+        const love = document.createElement("div");
+        love.className="message small final";
+        love.style.top="55%";
+        love.innerText="Love forever just for you ❤️💞";
+        notebook.appendChild(love);
+    };
+
+    heart.onclick = showFinal;
+    setTimeout(showFinal,3000);
+
+}, 6*1000 + 13*8000);
+</script>
 
 </body>
 </html>
