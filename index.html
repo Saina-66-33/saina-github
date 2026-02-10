@@ -1,156 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Valentine Surprise</title>
-<style>
-body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #000000; /* solid black */
-    overflow: hidden;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.notebook {
-    position: absolute;
-    width: 600px;
-    height: 600px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #ffffff;
-    box-shadow: 0 0 30px rgba(0,0,0,0.2);
-    overflow: hidden;
-    z-index: 2;
-}
-
-.heart {
-    position: absolute;
-    font-size: 24px;
-    pointer-events: none;
-    animation: floatHeart linear infinite;
-    z-index: 3;
-}
-
-@keyframes floatHeart {
-    0% { transform: translate(0,0) rotate(0deg); opacity: 1; }
-    100% { transform: translate(0, -1200px) rotate(360deg); opacity: 0; }
-}
-
-.message {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    top: 40%;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-    z-index: 4;
-}
-
-.message.big {
-    font-size: 60px;
-    color: #ff4d4d;
-    font-weight: bold;
-    font-family: 'Great Vibes', cursive;
-}
-
-.message.small {
-    font-size: 36px;
-    color: #ff4d4d;
-    font-family: 'Great Vibes', cursive;
-}
-
-#center-heart {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 80px;
-    cursor: pointer;
-    z-index: 5;
-    display: none;
-    opacity: 0;
-}
-
-#heart-note {
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Great Vibes', cursive;
-    font-size: 28px;
-    color: #ff4d4d;
-    opacity: 0;
-    z-index: 5;
-}
-
-#sparkle {
-    position: absolute;
-    font-size: 28px;
-    top: 45%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation: sparkleBounce 1s infinite alternate;
-    opacity: 0;
-    z-index: 6;
-    pointer-events: none;
-}
-
-@keyframes sparkleBounce {
-    0% { transform: translate(-50%, -50%) scale(1); }
-    100% { transform: translate(-50%, -60%) scale(1.2); }
-}
-
-@keyframes zoomIn {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.2); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-}
-</style>
-
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
-</head>
-<body>
-
-<div class="notebook" id="notebook"></div>
-
-<div id="center-heart">❤️</div>
-<div id="heart-note">You have touched my heart ❤️</div>
-<div id="sparkle">✨</div>
-
 <script>
+// Remove center heart feature
+// No need for showCenterHeart() or #center-heart related code
+
 const notebook = document.getElementById('notebook');
 
-// Floating hearts
-function createHeart() {
-    const bunchChance = Math.random();
-    const heartCount = bunchChance < 0.3 ? 6 + Math.floor(Math.random() * 2) : 1;
-
-    for (let i = 0; i < heartCount; i++) {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.innerText = '❤️';
-
-        const x = Math.random() * window.innerWidth + (i * 10);
-        const y = Math.random() * window.innerHeight + (i * 10);
-        heart.style.left = x + 'px';
-        heart.style.top = y + 'px';
-
-        const duration = 5 + Math.random() * 5;
-        heart.style.animationDuration = duration + 's';
-        heart.style.fontSize = (20 + Math.random() * 30) + 'px';
-
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), duration * 1000);
-    }
-}
-setInterval(createHeart, 500);
-
-// First message
+// First message (unchanged)
 function showFirstMessage() {
     const bigMsg = document.createElement('div');
     bigMsg.classList.add('message', 'big');
@@ -163,96 +17,49 @@ function showFirstMessage() {
             bigMsg.style.opacity = 0;
             setTimeout(() => {
                 bigMsg.remove();
-                showCenterHeart();
+                showValentineJourney(); // call new journey function
             }, 500);
         }, 3000);
-    }, 6600);
+    }, 1000); // fade in after 1 sec
 }
 
-// Center heart
-function showCenterHeart() {
-    const heart = document.getElementById('center-heart');
-    const note = document.getElementById('heart-note');
-    const sparkle = document.getElementById('sparkle');
-
-    heart.style.display = 'block';
-    sparkle.style.opacity = 1;
-
-    let triggered = false;
-
-    let visible = true;
-    const blinkInterval = setInterval(() => {
-        heart.style.opacity = visible ? 1 : 0;
-        visible = !visible;
-    }, 500);
-
-    setTimeout(() => {
-        clearInterval(blinkInterval);
-        heart.style.opacity = 1;
-        note.style.opacity = 1;
-    }, 600);
-
-    function trigger() {
-        if (triggered) return;
-        triggered = true;
-        sparkle.style.opacity = 0;
-        heart.style.display = 'none';
-        note.style.opacity = 0;
-        showSecondMessage();
-    }
-
-    heart.addEventListener('click', trigger, { once: true });
-    setTimeout(trigger, 3000);
-}
-
-// Second message
-function showSecondMessage() {
-    const smallMsg = document.createElement('div');
-    smallMsg.classList.add('message', 'small');
-    smallMsg.innerText = 'With you everything feels complete 💞';
-    notebook.appendChild(smallMsg);
-
-    smallMsg.style.opacity = 1;
-    smallMsg.style.animation = "zoomIn 0.8s ease forwards";
-
-    setTimeout(() => {
-        smallMsg.style.opacity = 0;
-        setTimeout(() => smallMsg.remove(), 500);
-        showRandomLines();
-    }, 6000);
-}
-
-const lines = [
-    "You make my heart feel full 💖",
-    "Sweetheart, you are my heart forever ❣️",
-    "Just thinking of you makes me smile 🥰"
+// New function: Valentine Week messages
+const journeyLines = [
+    "A short journey of Valentine’s week with your smile and let’s continue 🥰",
+    "You make my world bloom and blossom like a rose 🌹",
+    "I want to love you forever, and every day my love for you grows.",
+    "You are so sweet, and being with you makes my life sweeter every day, just like chocolate."
 ];
 
-function showRandomLines() {
+function showValentineJourney() {
     let index = 0;
     function showLine() {
-        if (index >= lines.length) return;
+        if(index >= journeyLines.length) return;
 
         const line = document.createElement('div');
         line.classList.add('message', 'small');
-        line.style.top = (30 + Math.random() * 40) + "%";
-        line.innerText = lines[index++];
+        line.style.top = "40%"; // center-ish
+        line.innerText = journeyLines[index++];
         notebook.appendChild(line);
 
+        // Fade in
         setTimeout(() => line.style.opacity = 1, 200);
+        // Fade out after 5 sec
         setTimeout(() => {
             line.style.opacity = 0;
             setTimeout(() => line.remove(), 500);
-        }, 6000);
+        }, 5000);
 
-        setTimeout(showLine, 7000);
+        // Show next line after 5.5 sec
+        setTimeout(showLine, 5500);
     }
     showLine();
 }
 
+// Start the first message
 setTimeout(showFirstMessage, 1000);
 
-// 🎀 Floating "I love you" watermark inside notebook
+// Floating "I love you" watermarks remain unchanged
 function createWatermarkWord() {
     const word = document.createElement('div');
     word.innerText = 'I love you ❤️';
@@ -284,15 +91,3 @@ setInterval(() => {
 }, 2000);
 
 </script>
-
-<!-- Spotify player -->
-<iframe
-  style="border-radius:12px; position: fixed; bottom: 20px; right: 20px; width: 300px; height: 80px; z-index: 1000;"
-  src="https://open.spotify.com/embed/track/25zwp2av5dhuTfF8dqDGUV?utm_source=generator"
-  frameborder="0"
-  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-  loading="lazy">
-</iframe>
-
-</body>
-</html>
