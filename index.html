@@ -114,7 +114,8 @@ function createHeart() {
     document.body.appendChild(heart);
     setTimeout(() => heart.remove(), duration * 1000);
 }
-setInterval(createHeart, 500);
+// Reduced interval to increase heart count
+setInterval(createHeart, 200);
 
 // Watermark — show immediately and then every 2s
 function createWatermarkWord() {
