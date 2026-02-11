@@ -65,14 +65,14 @@ body, html {
 
 .interactive-heart {
     position: absolute;
-    width: 200px;
-    height: 200px;
+    width: 160px; /* smaller */
+    height: 160px; /* smaller */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    font-size: 120px;
+    font-size: 100px; /* smaller */
     text-align: center;
-    line-height: 200px;
+    line-height: 160px; /* match size */
     cursor: pointer;
     z-index: 5;
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
@@ -82,7 +82,7 @@ body, html {
 .interactive-heart.show {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
-    animation: heartbeat 0.6s infinite;
+    animation: heartbeat 1.2s infinite; /* slower heartbeat */
 }
 
 @keyframes heartbeat {
@@ -145,101 +145,4 @@ const messages = [
     { text: "Let’s feel the moment through a few lines ❣️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "You are the one who makes my life bloom and blossom like a rose 🌹", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "I want to love you forever, and every day my love for you grows 💑❤️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
-    { text: "You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
-    { text: "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
-    { text: "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💌", duration: 5000, gap: 3000, className: 'small', decreaseFont: true },
-    { text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
-    { text: "Sending all my love ❤️ hoping you feel how special you are to me 💖", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
-    { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness 🥰\nWill you be my Valentine? 💌", duration: 6000, gap: 3000, className: 'small' },
-    { text: "You are my heart, my peace, and my comfort 💕", duration: 3000, gap: 3000, className: 'small', image: "interactiveHeart" },
-];
-
-// Show messages with timing
-let currentIndex = 0;
-
-function showMessage(index) {
-    if(index >= messages.length) return;
-
-    const msgObj = messages[index];
-    const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message', msgObj.className);
-    if(msgObj.increaseFont) msgDiv.style.fontSize = '42px';
-    if(msgObj.decreaseFont) msgDiv.style.fontSize = '32px';
-    msgDiv.style.top = '40%';
-    msgDiv.style.opacity = 0;
-    msgDiv.style.whiteSpace = "pre-line";
-    msgDiv.innerText = msgObj.text;
-    notebook.appendChild(msgDiv);
-
-    setTimeout(()=> msgDiv.style.opacity = 1, 200);
-
-    if(msgObj.image === "interactiveHeart") {
-        setTimeout(() => {
-            msgDiv.style.opacity = 0;
-            setTimeout(()=> msgDiv.remove(), 1000);
-
-            const heartDiv = document.createElement('div');
-            heartDiv.classList.add('interactive-heart');
-            heartDiv.innerText = '❤️';
-            notebook.appendChild(heartDiv);
-
-            setTimeout(()=> heartDiv.classList.add('show'), 200);
-
-            let autoShowTimeout = setTimeout(()=> {
-                showFinalMessages();
-                heartDiv.classList.remove('show');
-                setTimeout(()=> heartDiv.remove(), 500);
-            }, 3000);
-
-            heartDiv.addEventListener('click', ()=> {
-                clearTimeout(autoShowTimeout);
-                showFinalMessages();
-                heartDiv.classList.remove('show');
-                setTimeout(()=> heartDiv.remove(), 500);
-            });
-
-        }, msgObj.duration);
-    } else {
-        setTimeout(()=> {
-            msgDiv.style.opacity = 0;
-            setTimeout(()=> msgDiv.remove(), 1000);
-        }, msgObj.duration);
-    }
-
-    let nextDelay = (msgObj.gap || 3000) + msgObj.duration;
-    setTimeout(()=> showMessage(index+1), nextDelay);
-}
-
-function showFinalMessages(){
-    const happyValentine = document.createElement('div');
-    happyValentine.classList.add('message','small');
-    happyValentine.style.top = '50%';
-    happyValentine.style.opacity = 0;
-    happyValentine.style.whiteSpace = 'pre-line';
-    happyValentine.innerText = "Happy Valentine’s Day to my forever Valentine";
-    notebook.appendChild(happyValentine);
-    setTimeout(()=> happyValentine.style.opacity=1,200);
-
-    const loveForever = document.createElement('div');
-    loveForever.classList.add('message','small');
-    loveForever.style.top = '60%';
-    loveForever.style.opacity = 0;
-    loveForever.style.whiteSpace = 'pre-line';
-    loveForever.innerText = "Love forever just for you ❤️💞";
-    notebook.appendChild(loveForever);
-    setTimeout(()=> loveForever.style.opacity=1,200);
-}
-
-setTimeout(()=> showMessage(0), 6000);
-</script>
-
-<iframe
-  style="border-radius:12px; position: fixed; bottom: 20px; right: 20px; width: 300px; height: 80px; z-index: 1000;"
-  src="https://open.spotify.com/embed/track/25zwp2av5dhuTfF8dqDGUV?utm_source=generator"
-  frameborder="0"
-  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-  loading="lazy">
-</iframe>
-
-</body>
-</html>
+    { text: "You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️", duration: 5000, gap: 3000, className
