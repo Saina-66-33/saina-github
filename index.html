@@ -79,7 +79,6 @@ body, html {
     animation: none;
 }
 
-/* Heartbeat effect */
 .interactive-heart.show {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
@@ -138,12 +137,12 @@ function createWatermarkWord() {
 }
 setInterval(() => { for(let i=0;i<5;i++){ createWatermarkWord(); } }, 2000);
 
-// Messages with optional images
+// Messages
 const messages = [
     { text: "Sweetheart 💞", duration: 3000, className: 'big' },
     { text: "A sweet Valentine’s week journey with you 🌸💖", duration: 5000, gap: 3000, className: 'small' },
-    { text: "Your smile is precious to me 🥰✨", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
-    { text: "Let's continue 🥰💞", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "keep smiling—your smile is precious to me 🥰", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "Let's continue the moment 💞🥰", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "You are the one who makes my life bloom and blossom like a rose 🌹", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "I want to love you forever, and every day my love for you grows 💑❤️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
@@ -152,7 +151,6 @@ const messages = [
     { text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "Sending all my love ❤️ hoping you feel how special you are to me 💖", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness 🥰\nWill you be my Valentine? 💌", duration: 6000, gap: 3000, className: 'small' },
-    // Peace message triggers heartbeat heart
     { text: "You are my heart, my peace, and my comfort 💕", duration: 3000, gap: 3000, className: 'small', image: "interactiveHeart" },
 ];
 
@@ -175,13 +173,11 @@ function showMessage(index) {
 
     setTimeout(()=> msgDiv.style.opacity = 1, 200);
 
-    // Special handling for the "peace" message
     if(msgObj.image === "interactiveHeart") {
         setTimeout(() => {
             msgDiv.style.opacity = 0;
             setTimeout(()=> msgDiv.remove(), 1000);
 
-            // Show heartbeat heart
             const heartDiv = document.createElement('div');
             heartDiv.classList.add('interactive-heart');
             heartDiv.innerText = '❤️';
@@ -189,14 +185,12 @@ function showMessage(index) {
 
             setTimeout(()=> heartDiv.classList.add('show'), 200);
 
-            // Auto hide after 3s and show final messages
             let autoShowTimeout = setTimeout(()=> {
                 showFinalMessages();
                 heartDiv.classList.remove('show');
                 setTimeout(()=> heartDiv.remove(), 500);
             }, 3000);
 
-            // Click also triggers final messages immediately
             heartDiv.addEventListener('click', ()=> {
                 clearTimeout(autoShowTimeout);
                 showFinalMessages();
@@ -204,9 +198,8 @@ function showMessage(index) {
                 setTimeout(()=> heartDiv.remove(), 500);
             });
 
-        }, msgObj.duration); // Wait for peace message duration
+        }, msgObj.duration);
     } else {
-        // Normal messages fade out after duration
         setTimeout(()=> {
             msgDiv.style.opacity = 0;
             setTimeout(()=> msgDiv.remove(), 1000);
@@ -240,7 +233,6 @@ function showFinalMessages(){
 setTimeout(()=> showMessage(0), 6000);
 </script>
 
-<!-- Spotify player -->
 <iframe
   style="border-radius:12px; position: fixed; bottom: 20px; right: 20px; width: 300px; height: 80px; z-index: 1000;"
   src="https://open.spotify.com/embed/track/25zwp2av5dhuTfF8dqDGUV?utm_source=generator"
