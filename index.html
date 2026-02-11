@@ -46,6 +46,7 @@ body, html {
     position: absolute;
     width: 100%;
     text-align: center;
+    top: 40%;
     opacity: 0;
     transition: opacity 1s ease-in-out;
     z-index: 4;
@@ -53,19 +54,25 @@ body, html {
     color: #ff4d4d;
 }
 
-.message.big { font-size: 60px; font-weight: bold; }
-.message.small { font-size: 36px; }
+.message.big {
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.message.small {
+    font-size: 36px;
+}
 
 .interactive-heart {
     position: absolute;
-    width: 130px;
-    height: 130px;
-    top: 50%;
+    width: 180px;   /* slightly smaller */
+    height: 180px;  /* slightly smaller */
+    top: 50%;       /* perfectly centered */
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    font-size: 80px;
+    font-size: 100px;
     text-align: center;
-    line-height: 130px;
+    line-height: 180px;
     cursor: pointer;
     z-index: 5;
     transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
@@ -75,7 +82,7 @@ body, html {
 .interactive-heart.show {
     transform: translate(-50%, -50%) scale(1);
     opacity: 1;
-    animation: heartbeat 0.6s infinite;
+    animation: heartbeat 1.2s infinite;
 }
 
 @keyframes heartbeat {
@@ -94,7 +101,7 @@ body, html {
 <script>
 const notebook = document.getElementById('notebook');
 
-// Floating hearts
+// Floating hearts in background
 function createHeart() {
     const heart = document.createElement('div');
     heart.classList.add('heart');
@@ -142,9 +149,10 @@ const messages = [
     { text: "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💌", duration: 5000, gap: 3000, className: 'small', decreaseFont: true },
     { text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
-    { text: "Sending all my love 💌 hoping you feel how special you are to me 💖", duration: 5000, gap: 3000, className: 'small', increaseFont: true }, // emoji changed to 💌
-    { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness 🥰\nWill you be my Valentine? ❤️", duration: 6000, gap: 3000, className: 'small' }, // emoji changed to ❤️
-    { text: "You are my heart, my peace, and my comfort 💕", duration: 3000, gap: 3000, className: 'small', image: "interactiveHeart" },
+    { text: "Sending all my love 💌 hoping you feel how special you are to me 💖", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness 🥰\nWill you be my Valentine? ❤️", duration: 6000, gap: 3000, className: 'small' },
+    // Peace line — increase gap and center vertically
+    { text: "You are my heart, my peace, and my comfort 💕", duration: 3000, gap: 5000, className: 'small', image: "interactiveHeart" },
 ];
 
 // Show messages with timing
@@ -156,18 +164,20 @@ function showMessage(index) {
     const msgObj = messages[index];
     const msgDiv = document.createElement('div');
     msgDiv.classList.add('message', msgObj.className);
+
+    // Handle font size
     if(msgObj.increaseFont) msgDiv.style.fontSize = '42px';
     if(msgObj.decreaseFont) msgDiv.style.fontSize = '32px';
-    msgDiv.style.opacity = 0;
-    msgDiv.style.whiteSpace = "pre-line";
 
-    // More gap before heart
+    // Vertical positioning
     if(msgObj.image === "interactiveHeart") {
-        msgDiv.style.top = '25%';
+        msgDiv.style.top = '35%'; // peace line slightly above center
     } else {
-        msgDiv.style.top = '40%';
+        msgDiv.style.top = '40%'; // normal messages
     }
 
+    msgDiv.style.opacity = 0;
+    msgDiv.style.whiteSpace = "pre-line";
     msgDiv.innerText = msgObj.text;
     notebook.appendChild(msgDiv);
 
@@ -185,17 +195,20 @@ function showMessage(index) {
 
             setTimeout(()=> heartDiv.classList.add('show'), 200);
 
-            // Heart stays 3 seconds max
             let autoShowTimeout = setTimeout(()=> {
-                showFinalMessages(heartDiv);
+                showFinalMessages();
+                heartDiv.classList.remove('show');
+                setTimeout(()=> heartDiv.remove(), 500);
             }, 3000);
 
             heartDiv.addEventListener('click', ()=> {
                 clearTimeout(autoShowTimeout);
-                showFinalMessages(heartDiv);
+                showFinalMessages();
+                heartDiv.classList.remove('show');
+                setTimeout(()=> heartDiv.remove(), 500);
             });
 
-        }, msgObj.duration);
+        }, msgObj.duration + (msgObj.gap || 3000));
     } else {
         setTimeout(()=> {
             msgDiv.style.opacity = 0;
@@ -207,36 +220,31 @@ function showMessage(index) {
     setTimeout(()=> showMessage(index+1), nextDelay);
 }
 
-// Final messages appear inside heart
-function showFinalMessages(heartDiv){
-    heartDiv.classList.remove('show');
+function showFinalMessages(){
+    const happyValentine = document.createElement('div');
+    happyValentine.classList.add('message','small');
+    happyValentine.style.top = '50%';
+    happyValentine.style.opacity = 0;
+    happyValentine.style.whiteSpace = 'pre-line';
+    happyValentine.style.textAlign = 'center';
+    happyValentine.innerText = "Happy Valentine’s Day to my forever Valentine";
+    notebook.appendChild(happyValentine);
+    setTimeout(()=> happyValentine.style.opacity=1,200);
 
-    const messagesFinal = [
-        { text: "Happy Valentine’s Day to my forever Valentine", topOffset: -20 },
-        { text: "Love forever just for you ❤️💞", topOffset: 20 }
-    ];
-
-    messagesFinal.forEach(msg => {
-        const div = document.createElement('div');
-        div.classList.add('message','small');
-        div.style.top = `calc(50% + ${msg.topOffset}px)`;
-        div.style.left = '50%';
-        div.style.transform = 'translateX(-50%)';
-        div.style.opacity = 0;
-        div.style.whiteSpace = 'pre-line';
-        div.style.textAlign = 'center';
-        div.innerText = msg.text;
-        notebook.appendChild(div);
-        setTimeout(()=> div.style.opacity=1,200);
-    });
-
-    setTimeout(()=> heartDiv.remove(), 500);
+    const loveForever = document.createElement('div');
+    loveForever.classList.add('message','small');
+    loveForever.style.top = '60%';
+    loveForever.style.opacity = 0;
+    loveForever.style.whiteSpace = 'pre-line';
+    loveForever.style.textAlign = 'center';
+    loveForever.innerText = "Love forever just for you ❤️💞";
+    notebook.appendChild(loveForever);
+    setTimeout(()=> loveForever.style.opacity=1,200);
 }
 
 setTimeout(()=> showMessage(0), 6000);
 </script>
 
-<!-- Spotify embed -->
 <iframe
   style="border-radius:12px; position: fixed; bottom: 20px; right: 20px; width: 300px; height: 80px; z-index: 1000;"
   src="https://open.spotify.com/embed/track/25zwp2av5dhuTfF8dqDGUV?utm_source=generator"
