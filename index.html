@@ -10,7 +10,7 @@ body, html {
     padding: 0;
     width: 100%;
     height: 100%;
-    background-color: #000;
+    background-color: #000000;
     overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -22,9 +22,10 @@ body, html {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #fff;
+    background: #ffffff;
     box-shadow: 0 0 30px rgba(0,0,0,0.2);
     overflow: hidden;
+    z-index: 2;
     padding-top: 20px;
 }
 
@@ -48,13 +49,48 @@ body, html {
     top: 40%;
     opacity: 0;
     transition: opacity 1s ease-in-out;
+    z-index: 4;
     font-family: 'Great Vibes', cursive;
     color: #ff4d4d;
 }
 
-.message.big { font-size: 60px; font-weight: bold; }
-.message.small { font-size: 36px; }
+.message.big {
+    font-size: 60px;
+    font-weight: bold;
+}
 
+.message.small {
+    font-size: 36px;
+}
+
+.interactive-heart {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-size: 120px;
+    text-align: center;
+    line-height: 200px;
+    cursor: pointer;
+    z-index: 5;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    animation: none;
+}
+
+.interactive-heart.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    animation: heartbeat 0.6s infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    25% { transform: translate(-50%, -50%) scale(1.2); }
+    50% { transform: translate(-50%, -50%) scale(1); }
+    75% { transform: translate(-50%, -50%) scale(1.2); }
+}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
 </head>
@@ -65,10 +101,10 @@ body, html {
 <script>
 const notebook = document.getElementById('notebook');
 
-// Floating hearts
+// Floating hearts in background
 function createHeart() {
     const heart = document.createElement('div');
-    heart.className = 'heart';
+    heart.classList.add('heart');
     heart.innerText = '❤️';
     heart.style.left = Math.random() * window.innerWidth + 'px';
     heart.style.top = Math.random() * window.innerHeight + 'px';
@@ -80,36 +116,130 @@ function createHeart() {
 }
 setInterval(createHeart, 500);
 
+// Watermark
+function createWatermarkWord() {
+    const word = document.createElement('div');
+    word.innerText = 'I love you ❤️';
+    word.style.position = 'absolute';
+    word.style.fontSize = `${10 + Math.random() * 12}px`;
+    word.style.color = 'rgba(255,0,0,0.08)';
+    word.style.fontFamily = "'Great Vibes', cursive";
+    word.style.left = `${Math.random() * 90}%`;
+    word.style.top = `${Math.random() * 90}%`;
+    word.style.pointerEvents = 'none';
+    word.style.transition = 'transform 20s linear';
+    word.style.zIndex = 1;
+    notebook.appendChild(word);
+    const xMove = (Math.random() - 0.5) * 20;
+    const yMove = (Math.random() - 0.5) * 20;
+    setTimeout(() => { word.style.transform = `translate(${xMove}px, ${yMove}px)`; }, 100);
+    setTimeout(() => word.remove(), 25000);
+}
+setInterval(() => { for(let i=0;i<5;i++){ createWatermarkWord(); } }, 2000);
+
 // Messages
 const messages = [
-    { text: "Sweetheart 💞", className: 'big', duration: 3000 },
-    { text: "A sweet Valentine’s week journey with you 🌸💖", className: 'small', duration: 5000 },
-    { text: "keep smiling—your smile is precious to me 🥰", className: 'small', duration: 5000 },
-    { text: "Let’s feel the moment through a few lines ❣️", className: 'small', duration: 5000 }
+    { text: "Sweetheart 💞", duration: 3000, className: 'big' },
+    { text: "A sweet Valentine’s week journey with you 🌸💖", duration: 5000, gap: 3000, className: 'small' },
+    { text: "keep smiling—your smile is precious to me 🥰", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "Let’s feel the moment through a few lines ❣️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "You are the one who makes my life bloom and blossom like a rose 🌹", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "I want to love you forever, and every day my love for you grows 💑❤️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "You’re so sweet, and my life feels sweeter with you every day more than chocolate 🍫❤️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "My heart feels safe with you, wrapped in your soft side—softer than the softest teddy 🧸❤️", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "Whatever comes in life, I promise I’ll always be with you, and my love for you will stay the same 💌", duration: 5000, gap: 3000, className: 'small', decreaseFont: true },
+    { text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "Sending all my love ❤️ hoping you feel how special you are to me 💖", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
+    { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness 🥰\nWill you be my Valentine? 💌", duration: 6000, gap: 3000, className: 'small' },
+    { text: "You are my heart, my peace, and my comfort 💕", duration: 3000, gap: 3000, className: 'small', image: "interactiveHeart" },
 ];
 
-let messageIndex = 0;
+// Show messages with timing
+let currentIndex = 0;
 
-function showMessage() {
-    const msg = messages[messageIndex];
-    const div = document.createElement('div');
-    div.className = 'message ' + msg.className;
-    div.innerText = msg.text;
-    notebook.appendChild(div);
-    
-    setTimeout(() => { div.style.opacity = 1; }, 100); // fade in
-    setTimeout(() => {
-        div.style.opacity = 0; // fade out
-        setTimeout(() => div.remove(), 1000);
-    }, msg.duration);
+function showMessage(index) {
+    if(index >= messages.length) return;
 
-    messageIndex = (messageIndex + 1) % messages.length;
-    setTimeout(showMessage, msg.duration + 1000); // schedule next message
+    const msgObj = messages[index];
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', msgObj.className);
+    if(msgObj.increaseFont) msgDiv.style.fontSize = '42px';
+    if(msgObj.decreaseFont) msgDiv.style.fontSize = '32px';
+    msgDiv.style.top = '40%';
+    msgDiv.style.opacity = 0;
+    msgDiv.style.whiteSpace = "pre-line";
+    msgDiv.innerText = msgObj.text;
+    notebook.appendChild(msgDiv);
+
+    setTimeout(()=> msgDiv.style.opacity = 1, 200);
+
+    if(msgObj.image === "interactiveHeart") {
+        setTimeout(() => {
+            msgDiv.style.opacity = 0;
+            setTimeout(()=> msgDiv.remove(), 1000);
+
+            const heartDiv = document.createElement('div');
+            heartDiv.classList.add('interactive-heart');
+            heartDiv.innerText = '❤️';
+            notebook.appendChild(heartDiv);
+
+            setTimeout(()=> heartDiv.classList.add('show'), 200);
+
+            let autoShowTimeout = setTimeout(()=> {
+                showFinalMessages();
+                heartDiv.classList.remove('show');
+                setTimeout(()=> heartDiv.remove(), 500);
+            }, 3000);
+
+            heartDiv.addEventListener('click', ()=> {
+                clearTimeout(autoShowTimeout);
+                showFinalMessages();
+                heartDiv.classList.remove('show');
+                setTimeout(()=> heartDiv.remove(), 500);
+            });
+
+        }, msgObj.duration);
+    } else {
+        setTimeout(()=> {
+            msgDiv.style.opacity = 0;
+            setTimeout(()=> msgDiv.remove(), 1000);
+        }, msgObj.duration);
+    }
+
+    let nextDelay = (msgObj.gap || 3000) + msgObj.duration;
+    setTimeout(()=> showMessage(index+1), nextDelay);
 }
 
-// start showing messages
-showMessage();
+function showFinalMessages(){
+    const happyValentine = document.createElement('div');
+    happyValentine.classList.add('message','small');
+    happyValentine.style.top = '50%';
+    happyValentine.style.opacity = 0;
+    happyValentine.style.whiteSpace = 'pre-line';
+    happyValentine.innerText = "Happy Valentine’s Day to my forever Valentine";
+    notebook.appendChild(happyValentine);
+    setTimeout(()=> happyValentine.style.opacity=1,200);
+
+    const loveForever = document.createElement('div');
+    loveForever.classList.add('message','small');
+    loveForever.style.top = '60%';
+    loveForever.style.opacity = 0;
+    loveForever.style.whiteSpace = 'pre-line';
+    loveForever.innerText = "Love forever just for you ❤️💞";
+    notebook.appendChild(loveForever);
+    setTimeout(()=> loveForever.style.opacity=1,200);
+}
+
+setTimeout(()=> showMessage(0), 6000);
 </script>
+
+<iframe
+  style="border-radius:12px; position: fixed; bottom: 20px; right: 20px; width: 300px; height: 80px; z-index: 1000;"
+  src="https://open.spotify.com/embed/track/25zwp2av5dhuTfF8dqDGUV?utm_source=generator"
+  frameborder="0"
+  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+  loading="lazy">
+</iframe>
 
 </body>
 </html>
