@@ -65,9 +65,9 @@ body, html {
 
 .interactive-heart {
     position: absolute;
-    width: 180px;   /* slightly smaller */
-    height: 180px;  /* slightly smaller */
-    top: 50%;       /* perfectly centered */
+    width: 180px;
+    height: 180px;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
     font-size: 100px;
@@ -116,7 +116,7 @@ function createHeart() {
 }
 setInterval(createHeart, 500);
 
-// Watermark
+// Watermark — show immediately and then every 2s
 function createWatermarkWord() {
     const word = document.createElement('div');
     word.innerText = 'I love you ❤️';
@@ -135,6 +135,11 @@ function createWatermarkWord() {
     setTimeout(() => { word.style.transform = `translate(${xMove}px, ${yMove}px)`; }, 100);
     setTimeout(() => word.remove(), 25000);
 }
+
+// Show initial watermarks immediately
+for(let i=0;i<5;i++){ createWatermarkWord(); }
+
+// Continue creating them every 2 seconds
 setInterval(() => { for(let i=0;i<5;i++){ createWatermarkWord(); } }, 2000);
 
 // Messages
@@ -151,7 +156,6 @@ const messages = [
     { text: "Distance doesn’t matter—here’s a hug full of love to make my special person feel warm and special ❤️🤗🥰", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "Sending all my love 💌 hoping you feel how special you are to me 💖", duration: 5000, gap: 3000, className: 'small', increaseFont: true },
     { text: "With you, everything feels complete 💖\nYou feel like home to me 🏠\nJust thinking of you makes me smile 😍\nYou are my favorite happiness 🥰\nWill you be my Valentine? ❤️", duration: 6000, gap: 3000, className: 'small' },
-    // Peace line — increase gap and center vertically
     { text: "You are my heart, my peace, and my comfort 💕", duration: 3000, gap: 5000, className: 'small', image: "interactiveHeart" },
 ];
 
@@ -165,15 +169,13 @@ function showMessage(index) {
     const msgDiv = document.createElement('div');
     msgDiv.classList.add('message', msgObj.className);
 
-    // Handle font size
     if(msgObj.increaseFont) msgDiv.style.fontSize = '42px';
     if(msgObj.decreaseFont) msgDiv.style.fontSize = '32px';
 
-    // Vertical positioning
     if(msgObj.image === "interactiveHeart") {
-        msgDiv.style.top = '35%'; // peace line slightly above center
+        msgDiv.style.top = '35%';
     } else {
-        msgDiv.style.top = '40%'; // normal messages
+        msgDiv.style.top = '40%';
     }
 
     msgDiv.style.opacity = 0;
